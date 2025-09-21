@@ -56,15 +56,17 @@ fun AboutScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val context = LocalContext.current
+
+
         Text(
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
-            text = "About"
+            text = "Sensor Spot"
         )
         
         Text(
             text = if (LocalInspectionMode.current) "v1.3.4" else getAppVersion(context),
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
 
