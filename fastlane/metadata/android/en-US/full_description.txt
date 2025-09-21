@@ -1,0 +1,1 @@
+An Android app that streams real-time device sensor data to an MQTT broker. Users can choose sensors (e.g., accelerometer, gyroscope) and easily configure broker settings such as server address, port, credentials, topics, and QoS. The app then publishes live readings seamlessly, making it a practical tool for IoT projects, dashboards, and real-time analytics.
