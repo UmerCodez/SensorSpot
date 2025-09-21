@@ -27,6 +27,7 @@ The data is published to the topic `android/sensor` in the following JSON format
   "values": [0.31892395, -0.97802734, 10.049896]
 }
 ```
+This format is similar to one used in [SensaGram](https://github.com/UmerCodez/SensaGram)
 
 ![axis\_device](https://user-images.githubusercontent.com/35717992/179351418-bf3b511a-ebea-49bb-af65-5afd5f464e14.png)
 
