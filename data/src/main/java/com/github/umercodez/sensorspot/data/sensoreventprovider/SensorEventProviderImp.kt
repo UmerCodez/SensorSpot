@@ -56,7 +56,7 @@ import kotlinx.serialization.json.Json
 
 @Serializable
 private data class SensorEvent(
-    val sensorType: String,
+    val type: String,
     val values: List<Float>,
     val timestamp: Long
 ){
@@ -117,7 +117,7 @@ class SensorEventProviderImp(
         scope.launch {
             _events.emit(
                 SensorEvent(
-                    sensorType = sensorEvent.sensor.stringType,
+                    type = sensorEvent.sensor.stringType,
                     values = sensorEvent.values.toList(),
                     timestamp = sensorEvent.timestamp
                 ).toJson()
