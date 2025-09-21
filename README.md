@@ -1,7 +1,9 @@
 <div align="center">
 
 ![GitHub License](https://img.shields.io/github/license/UmerCodez/SensorSpot?style=for-the-badge)
-   ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge)
+   ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/UmerCodez/SensorSpot?include_prereleases&style=for-the-badge)
+
+[<img src="https://github.com/user-attachments/assets/0f628053-199f-4587-a5b2-034cf027fb99" height="100">](https://github.com/UmerCodez/SensorSpot/releases)   
 
 
 # Sensor Spot
