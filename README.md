@@ -21,6 +21,7 @@
 
 1. Configure your broker settings.
 2. Press **Connect** to start streaming the selected sensor data in real time.
+3. App allows user to select or deselect sensors **while connected**, with the published data automatically updating to reflect the new choices.
 
 
 The data is published to the topic `android/sensor` in the following JSON format:
@@ -33,8 +34,11 @@ The data is published to the topic `android/sensor` in the following JSON format
 }
 ```
 This format is similar to one used in [SensaGram](https://github.com/UmerCodez/SensaGram)
+<div align="center">
+   
+<img width="282" height="341" alt="image" src="https://github.com/user-attachments/assets/4742b447-3713-417a-b3aa-d06903f30a7a" />
 
-![axis\_device](https://user-images.githubusercontent.com/35717992/179351418-bf3b511a-ebea-49bb-af65-5afd5f464e14.png)
+</div>
 
 ### Explanation
 
