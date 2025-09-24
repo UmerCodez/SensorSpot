@@ -65,7 +65,7 @@ fun AboutScreen() {
         )
         
         Text(
-            text = if (LocalInspectionMode.current) "v1.3.4" else getAppVersion(context),
+            text = if (LocalInspectionMode.current) "v1.3.4" else "v" + getAppVersion(context),
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
