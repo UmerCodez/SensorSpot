@@ -1,6 +1,6 @@
 [versions]
 agp = "8.11.1" # Fdroid can't build apps with agp 8.12.0+ see issue https://forum.f-droid.org/t/f-droid-build-servers-cant-build-modern-android-apps-due-to-outdated-cpus/33065/21
-kotlin = "2.2.10"
+kotlin = "2.2.20"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
