@@ -56,7 +56,7 @@ This format is similar to one used in [SensaGram](https://github.com/UmerCodez/S
 * [Position sensors](https://developer.android.com/guide/topics/sensors/sensors_position)
 * [Environmental sensors](https://developer.android.com/guide/topics/sensors/sensors_environment)
 
-### Limition on Android 14+ devices
+### Limitation on Android 14+ devices
 Starting with Android 14, background execution restrictions are more strict. When you connect to the broker, the app starts a foreground service to publish sensor data in real time. However, if you leave the app for more than 5 seconds (e.g., switch to another app or close it), the system may stop this foreground service, causing a disconnection from the broker. This occurs even if background activity is allowed for the app.
 
 To avoid this issue, keep the app running in the foreground while connected. 
