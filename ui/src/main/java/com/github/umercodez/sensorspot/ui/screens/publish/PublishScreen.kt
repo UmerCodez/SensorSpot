@@ -39,8 +39,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.umercodez.sensorspot.data.sensorpublisher.MqttConfig
 import com.github.umercodez.sensorspot.data.sensorpublisher.MqttConnectionState
 import com.github.umercodez.sensorspot.ui.SensorSpotTheme
-import com.github.umercodez.sensorspot.ui.screens.publish.components.ConnectionStatusCard
 import com.github.umercodez.sensorspot.ui.screens.publish.components.ConnectionControllerButton
+import com.github.umercodez.sensorspot.ui.screens.publish.components.ConnectionStatusCard
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 
