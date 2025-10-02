@@ -248,20 +248,14 @@ class SensorPublisher(
 
     }
 
-    suspend fun close() : Unit = withContext(ioDispatcher) {
+    suspend fun disconnect() : Unit = withContext(ioDispatcher) {
         try {
 
             mqttAsyncClient?.disconnect()
             mqttAsyncClient?.close()
-            mqttAsyncClient = null
             _mqttConnectionState.emit(MqttConnectionState.DISCONNECTED)
             sensorEventProvider?.stopProvidingEvents()
-            sensorEventProvider?.cleanUp()
-            sensorEventProvider = null
             gpsDataProvider?.stopProvidingGpsData()
-            gpsDataProvider?.cleanUp()
-            scope?.cancel()
-            scope = null
             clock.reset()
 
         } catch (e: Exception) {
@@ -276,6 +270,15 @@ class SensorPublisher(
 
     fun stopProvidingGpsData(){
         gpsDataProvider?.stopProvidingGpsData()
+    }
+
+    fun cleanUp(){
+        scope?.cancel()
+        sensorEventProvider?.stopProvidingEvents()
+        sensorEventProvider?.cleanUp()
+
+        gpsDataProvider?.startProvidingGpsData()
+        gpsDataProvider?.cleanUp()
     }
 
 }

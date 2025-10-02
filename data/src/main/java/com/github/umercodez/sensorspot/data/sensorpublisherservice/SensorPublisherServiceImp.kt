@@ -180,8 +180,10 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
 
     override fun stopPublishing() {
         scope.launch {
-            sensorPublisher.close()
+            sensorPublisher.disconnect()
         }
+
+        stopSelf()
     }
 
     override fun startPublishing() {
@@ -193,6 +195,7 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         super.onDestroy()
         Log.d(TAG, "onDestroy()")
         scope.cancel()
+        sensorPublisher.cleanUp()
     }
 
     /**
