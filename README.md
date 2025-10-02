@@ -62,8 +62,8 @@ GPS data is sent in following json format
 ```json
 {
   "type": "android.gps",
-  "longitude": 71.5249,
-  "latitude": 34.0149,
+  "longitude": 155.9011,
+  "latitude": 81.4278,
   "altitude": 217.5,
   "bearing": 135.0,
   "accuracy": 5.2,
