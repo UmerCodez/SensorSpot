@@ -3,7 +3,7 @@
 ![GitHub License](https://img.shields.io/github/license/UmerCodez/SensorSpot?style=for-the-badge)
    ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![MQTT](https://img.shields.io/badge/protocol-mqtt_v5-green?style=for-the-badge) ![Android](https://img.shields.io/badge/Android%205.0+-3DDC84?style=for-the-badge&logo=android&logoColor=white) ![GitHub Release](https://img.shields.io/github/v/release/UmerCodez/SensorSpot?include_prereleases&style=for-the-badge) ![Material 3](https://img.shields.io/badge/Material%203-ebe89d?style=for-the-badge&logo=materialdesign&logoColor=white)
 
-[<img src="https://github.com/user-attachments/assets/0f628053-199f-4587-a5b2-034cf027fb99" height="100">](https://github.com/UmerCodez/SensorSpot/releases)   
+[<img src="https://github.com/user-attachments/assets/0f628053-199f-4587-a5b2-034cf027fb99" height="100">](https://github.com/UmerCodez/SensorSpot/releases) [<img src="https://github.com/user-attachments/assets/f311c689-cfd1-4326-8e7d-323e2e117006" height="100">](https://apt.izzysoft.de/fdroid/index/apk/com.github.umercodez.sensorspot)  
 
 
 # Sensor Spot
@@ -56,7 +56,7 @@ This format is similar to one used in [SensaGram](https://github.com/UmerCodez/S
 * [Position sensors](https://developer.android.com/guide/topics/sensors/sensors_position)
 * [Environmental sensors](https://developer.android.com/guide/topics/sensors/sensors_environment)
 
-### Limition on Android 14+ devices
+### Limitation on Android 14+ devices
 Starting with Android 14, background execution restrictions are more strict. When you connect to the broker, the app starts a foreground service to publish sensor data in real time. However, if you leave the app for more than 5 seconds (e.g., switch to another app or close it), the system may stop this foreground service, causing a disconnection from the broker. This occurs even if background activity is allowed for the app.
 
 To avoid this issue, keep the app running in the foreground while connected. 
