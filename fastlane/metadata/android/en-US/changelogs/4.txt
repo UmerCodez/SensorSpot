@@ -1,0 +1,1 @@
+Fix: Added type parameter to GPS Json data
