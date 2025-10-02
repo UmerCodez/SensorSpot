@@ -56,6 +56,33 @@ This format is similar to one used in [SensaGram](https://github.com/UmerCodez/S
 * [Position sensors](https://developer.android.com/guide/topics/sensors/sensors_position)
 * [Environmental sensors](https://developer.android.com/guide/topics/sensors/sensors_environment)
 
+  
+## GPS data format
+GPS data is sent in following json format
+```json
+{
+  "type": "android.gps",
+  "longitude": 71.5249,
+  "latitude": 34.0149,
+  "altitude": 217.5,
+  "bearing": 135.0,
+  "accuracy": 5.2,
+  "speed": 2.8,
+  "time": 1727845963000
+}
+```
+where:
+
+| Field       | Description                                                                                                            |
+|-------------|------------------------------------------------------------------------------------------------------------------------|
+| longitude   | Longitude in degrees.                                                                                                 |
+| latitude    | Latitude in degrees.                                                                                                  |
+| altitude    | The altitude of the location in meters above the WGS84 reference ellipsoid.                                         |
+| bearing     | Bearing at the time of this location in degrees. Bearing is the horizontal direction of travel and is unrelated to device orientation. The bearing is guaranteed to be in the range \[0, 360). |
+| accuracy    | Estimated horizontal accuracy radius in meters of this location at the 68th percentile confidence level.           |
+| speed       | Speed at the time of this location in meters per second.                                                            |
+| time        | The Unix epoch time of this location fix, in milliseconds since the start of the Unix epoch (00:00:00 January 1, 1970 UTC). |
+
 ### Limitation on Android 14+ devices
 Starting with Android 14, background execution restrictions are more strict. When you connect to the broker, the app starts a foreground service to publish sensor data in real time. However, if you leave the app for more than 5 seconds (e.g., switch to another app or close it), the system may stop this foreground service, causing a disconnection from the broker. This occurs even if background activity is allowed for the app.
 
