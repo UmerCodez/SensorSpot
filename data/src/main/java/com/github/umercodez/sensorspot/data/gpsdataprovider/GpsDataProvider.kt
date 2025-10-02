@@ -23,9 +23,13 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+private val jsonConf = Json {
+    encodeDefaults = true
+}
 
 @Serializable
 data class GpsData(
+    val type: String = "android.gps",
     val latitude: Double,
     val longitude: Double,
     val altitude: Double,
@@ -34,7 +38,7 @@ data class GpsData(
     val time: Long,
     val bearing: Float
 ){
-    fun toJson() =  Json.encodeToString(this)
+    fun toJson() =  jsonConf.encodeToString(this)
 }
 
 interface GpsDataProvider {
