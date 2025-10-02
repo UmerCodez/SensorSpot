@@ -33,17 +33,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
-@Serializable
-private data class SensorEvent(
-    val type: String,
-    val values: List<Float>,
-    val timestamp: Long
-){
-    fun toJson() = Json.encodeToString(this)
-}
+
 
 class SensorEventProviderImp(
     context: Context
@@ -52,13 +43,13 @@ class SensorEventProviderImp(
 
     private val scope : CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    private val _events = MutableSharedFlow<String>()
+    private val _events = MutableSharedFlow<SensorEvent>()
     private var handlerThread: HandlerThread = HandlerThread("Handler Thread")
     private var handler: Handler
 
     private var _sensorTypes = listOf<Int>()
 
-    override val events: Flow<String>
+    override val events: Flow<SensorEvent>
         get() = _events.asSharedFlow()
 
 
@@ -102,7 +93,7 @@ class SensorEventProviderImp(
                     type = sensorEvent.sensor.stringType,
                     values = sensorEvent.values.toList(),
                     timestamp = sensorEvent.timestamp
-                ).toJson()
+                )
             )
         }
 

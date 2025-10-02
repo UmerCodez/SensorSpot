@@ -104,12 +104,12 @@ class SensorPublisher(
         }
 
         scope?.launch {
-            sensorEventProvider?.events?.collect{ json: String ->
+            sensorEventProvider?.events?.collect{ sensorEvent ->
 
                 try {
 
                     if(mqttAsyncClient?.isConnected == true) {
-                        val message = MqttMessage(json.toByteArray()).apply {
+                        val message = MqttMessage(sensorEvent.toJson().toByteArray()).apply {
                             qos = mqttConfig.qos
                         }
                         mqttAsyncClient?.publish(mqttConfig.topic, message)
