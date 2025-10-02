@@ -22,11 +22,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.umercodez.sensorspot.data.repositories.settings.sensor.SensorsRepository
+import com.github.umercodez.sensorspot.data.utils.LocationPermissionUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,7 +33,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SensorScreenViewModel @Inject constructor(
-    private val sensorsRepository: SensorsRepository
+    private val sensorsRepository: SensorsRepository,
+    private val locationPermissionUtil: LocationPermissionUtil
 ): ViewModel(){
 
     private val _uiState = MutableStateFlow(SensorsScreenState())
@@ -52,6 +52,10 @@ class SensorScreenViewModel @Inject constructor(
 
             sensorsRepository.getSelectedSensors().forEach { sensor ->
                 _uiState.value.sensorSelectionState[sensor] = true
+            }
+
+            _uiState.update {
+                it.copy(locationPermissionGranted = locationPermissionUtil.isLocationPermissionGranted())
             }
 
         }
@@ -80,7 +84,29 @@ class SensorScreenViewModel @Inject constructor(
                     sensorsRepository.saveSelectedSensors(selectedSensors)
                 }
             }
+
+            is SensorsScreenEvent.OnGpsItemCheckedChange -> {
+                viewModelScope.launch {
+
+                    val gpsChecked = event.checked && locationPermissionUtil.isLocationPermissionGranted()
+
+                    _uiState.update {
+                        it.copy(gpsChecked = gpsChecked)
+                    }
+                    sensorsRepository.saveGpsSelectionState(gpsChecked)
+                }
+            }
+            is SensorsScreenEvent.OnGrantLocationPermissionClick -> {
+
+            }
         }
+    }
+
+    fun onLocationPermissionStateChange() {
+        _uiState.update {
+            it.copy(locationPermissionGranted = locationPermissionUtil.isLocationPermissionGranted())
+        }
+
     }
 
 }

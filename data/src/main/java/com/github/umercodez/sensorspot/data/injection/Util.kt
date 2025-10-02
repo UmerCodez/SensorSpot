@@ -19,10 +19,10 @@
 package com.github.umercodez.sensorspot.data.injection
 
 import android.content.Context
-import com.github.umercodez.sensorspot.data.repositories.settings.sensor.SensorsRepository
-import com.github.umercodez.sensorspot.data.repositories.settings.sensor.SensorsRepositoryImp
-import com.github.umercodez.sensorspot.data.sensorpublisherservice.SensorPublisherServiceBindHelperImp
 import com.github.umercodez.sensorspot.data.sensorpublisherservice.SensorPublisherServiceBindHelper
+import com.github.umercodez.sensorspot.data.sensorpublisherservice.SensorPublisherServiceBindHelperImp
+import com.github.umercodez.sensorspot.data.utils.LocationPermissionUtil
+import com.github.umercodez.sensorspot.data.utils.LocationPermissionUtilImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +38,11 @@ object Util {
     @ViewModelScoped
     fun provideSensorPublisherServiceBindHelper(@ApplicationContext context: Context): SensorPublisherServiceBindHelper {
         return SensorPublisherServiceBindHelperImp(context)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideLocationPermissionUtil(@ApplicationContext context: Context): LocationPermissionUtil {
+        return LocationPermissionUtilImp(context)
     }
 }

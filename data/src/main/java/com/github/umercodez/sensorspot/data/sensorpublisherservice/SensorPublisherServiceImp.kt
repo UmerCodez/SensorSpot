@@ -18,13 +18,14 @@
  */
 package com.github.umercodez.sensorspot.data.sensorpublisherservice
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.pm.ServiceInfo
 import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -68,6 +69,10 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         get() = sensorPublisher.elapsedTime
 
     private var isConnected: Boolean = false
+
+    private val locationPermissionGranted : Boolean
+        get() = !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                applicationContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
 
     override fun onCreate() {
         super.onCreate()
@@ -154,6 +159,20 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         scope.launch {
             sensorsRepository.getSelectedSensorsAsFlow().collect { selectedSenors ->
                 sensorPublisher.sensorIntTypes = selectedSenors.map { it.type }
+            }
+        }
+
+        scope.launch {
+            sensorsRepository.gpsSelectionState.collect { isGpsSelected ->
+
+                if(!locationPermissionGranted)
+                    return@collect
+
+
+                if(isGpsSelected)
+                    sensorPublisher.provideGpsData()
+                else
+                    sensorPublisher.stopProvidingGpsData()
             }
         }
 

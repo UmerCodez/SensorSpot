@@ -23,9 +23,10 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -44,6 +45,7 @@ class SensorsRepositoryImp(
 
     private object Key{
         val SELECTED_SENSORS = stringPreferencesKey("selected_sensors")
+        val GPS_ENABLED = booleanPreferencesKey("gps_enabled")
     }
 
 
@@ -77,4 +79,15 @@ class SensorsRepositoryImp(
         }.flowOn(ioDispatcher)
     }
 
+
+    override suspend fun saveGpsSelectionState(state: Boolean) {
+        context.userPreferencesDataStore.edit { pref ->
+            pref[Key.GPS_ENABLED] = state
+        }
+    }
+
+    override val gpsSelectionState : Flow<Boolean>
+        get()  = context.userPreferencesDataStore.data.map { pref ->
+            pref[Key.GPS_ENABLED] ?: false
+        }
 }

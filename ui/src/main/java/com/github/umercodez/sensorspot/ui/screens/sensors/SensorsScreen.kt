@@ -18,6 +18,7 @@
  */
 package com.github.umercodez.sensorspot.ui.screens.sensors
 
+import android.Manifest
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,23 +32,39 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.umercodez.sensorspot.data.repositories.settings.sensor.fakeSensors
 import com.github.umercodez.sensorspot.ui.SensorSpotTheme
+import com.github.umercodez.sensorspot.ui.screens.sensors.components.GpsItem
 import com.github.umercodez.sensorspot.ui.screens.sensors.components.SensorItem
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SensorsScreen(
     viewModel: SensorScreenViewModel = hiltViewModel(),
     onSelectedSensorsCountChange: ((Int) -> Unit)? = null
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
     LaunchedEffect(state.selectedSensorsCount) {
         onSelectedSensorsCountChange?.invoke(state.selectedSensorsCount)
     }
 
+    LaunchedEffect(locationPermissionState.status) {
+        viewModel.onLocationPermissionStateChange()
+    }
+
     SensorsScreen(
         state = state,
-        onEvent = viewModel::onEvent
+        onEvent = { event ->
+
+            if(event is SensorsScreenEvent.OnGrantLocationPermissionClick) {
+                locationPermissionState.launchPermissionRequest()
+            }
+
+            viewModel.onEvent(event)
+        }
     )
 
 }
@@ -71,6 +88,18 @@ fun SensorsScreen(
                 checked = state.sensorSelectionState[sensor] == true,
                 onCheckedChange = {
                     onEvent(SensorsScreenEvent.OnSensorItemCheckedChange(sensor, it))
+                }
+            )
+        }
+        item {
+            GpsItem(
+                checked = state.gpsChecked,
+                onCheckedChange = {
+                    onEvent(SensorsScreenEvent.OnGpsItemCheckedChange(it))
+                },
+                locationPermissionGranted = state.locationPermissionGranted,
+                onGrantLocationPermissionClick = {
+                    onEvent(SensorsScreenEvent.OnGrantLocationPermissionClick)
                 }
             )
         }

@@ -26,4 +26,7 @@ interface SensorsRepository {
     suspend fun saveSelectedSensors(sensors : List<DeviceSensor>)
     suspend fun getSelectedSensors() : List<DeviceSensor>
     fun getSelectedSensorsAsFlow(): Flow<List<DeviceSensor>>
+    suspend fun saveGpsSelectionState(state: Boolean)
+    val gpsSelectionState: Flow<Boolean>
+
 }

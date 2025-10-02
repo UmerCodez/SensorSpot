@@ -16,12 +16,31 @@
  *     along with SensorSpot. If not, see <https://www.gnu.org/licenses/>.
  *
  */
-package com.github.umercodez.sensorspot.ui.screens.sensors
 
-import com.github.umercodez.sensorspot.data.repositories.settings.sensor.DeviceSensor
+package com.github.umercodez.sensorspot.data.gpsdataprovider
 
-sealed interface SensorsScreenEvent {
-    data class OnSensorItemCheckedChange(val sensor: DeviceSensor, val checked: Boolean) : SensorsScreenEvent
-    data class OnGpsItemCheckedChange(val checked: Boolean) : SensorsScreenEvent
-    data object OnGrantLocationPermissionClick : SensorsScreenEvent
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+
+
+@Serializable
+data class GpsData(
+    val latitude: Double,
+    val longitude: Double,
+    val altitude: Double,
+    val accuracy: Float,
+    val speed: Float,
+    val time: Long,
+    val bearing: Float
+){
+    fun toJson() =  Json.encodeToString(this)
+}
+
+interface GpsDataProvider {
+    val gpsData : SharedFlow<GpsData>
+
+    fun startProvidingGpsData()
+    fun stopProvidingGpsData()
+    fun cleanUp()
 }

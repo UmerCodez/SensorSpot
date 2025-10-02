@@ -16,12 +16,20 @@
  *     along with SensorSpot. If not, see <https://www.gnu.org/licenses/>.
  *
  */
-package com.github.umercodez.sensorspot.ui.screens.sensors
 
-import com.github.umercodez.sensorspot.data.repositories.settings.sensor.DeviceSensor
+package com.github.umercodez.sensorspot.data.utils
 
-sealed interface SensorsScreenEvent {
-    data class OnSensorItemCheckedChange(val sensor: DeviceSensor, val checked: Boolean) : SensorsScreenEvent
-    data class OnGpsItemCheckedChange(val checked: Boolean) : SensorsScreenEvent
-    data object OnGrantLocationPermissionClick : SensorsScreenEvent
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+
+class LocationPermissionUtilImp(
+    private val context: Context
+) : LocationPermissionUtil {
+    override fun isLocationPermissionGranted(): Boolean {
+        return !(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+    }
+
 }
