@@ -41,15 +41,10 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SensorsScreen(
-    viewModel: SensorScreenViewModel = hiltViewModel(),
-    onSelectedSensorsCountChange: ((Int) -> Unit)? = null
+    viewModel: SensorScreenViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-
-    LaunchedEffect(state.selectedSensorsCount) {
-        onSelectedSensorsCountChange?.invoke(state.selectedSensorsCount)
-    }
 
     LaunchedEffect(locationPermissionState.status) {
         viewModel.onLocationPermissionStateChange()

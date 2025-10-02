@@ -27,7 +27,6 @@ import com.github.umercodez.sensorspot.data.repositories.settings.sensor.DeviceS
 data class SensorsScreenState(
     val allSensors: SnapshotStateList<DeviceSensor> = mutableStateListOf(),
     val sensorSelectionState: SnapshotStateMap<DeviceSensor, Boolean> = mutableStateMapOf(),
-    val selectedSensorsCount: Int = 0,
     val locationPermissionGranted: Boolean = false,
     val gpsChecked: Boolean = false
 )

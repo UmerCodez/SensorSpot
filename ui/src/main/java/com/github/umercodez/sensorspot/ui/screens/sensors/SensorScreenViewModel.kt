@@ -60,14 +60,6 @@ class SensorScreenViewModel @Inject constructor(
 
         }
 
-        viewModelScope.launch {
-            sensorsRepository.getSelectedSensorsAsFlow().collect { selectedSensors ->
-                _uiState.update {
-                    it.copy(selectedSensorsCount = selectedSensors.size)
-                }
-            }
-        }
-
     }
 
     fun onEvent(event: SensorsScreenEvent) {
