@@ -34,13 +34,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -51,12 +60,23 @@ import com.github.umercodez.sensorspot.data.sensorpublisher.MqttConnectionState
 import com.github.umercodez.sensorspot.ui.SensorSpotTheme
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConnectionStatusCard(
     modifier: Modifier = Modifier,
     mqttConnectionState: MqttConnectionState,
     time: ElapsedTime
 ) {
+
+    var showErrorBottomSheet by remember { mutableStateOf(false) }
+    var exception by remember { mutableStateOf<Throwable?>(null) }
+
+    LaunchedEffect(mqttConnectionState) {
+        if(mqttConnectionState is MqttConnectionState.ConnectionError) {
+            exception = mqttConnectionState.exception
+        }
+    }
+
     ElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp)
@@ -122,15 +142,57 @@ fun ConnectionStatusCard(
         }
         AnimatedVisibility(mqttConnectionState == MqttConnectionState.Connected) {
             Text(
-                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
                 text = time.toString(),
                 maxLines = 1,
                 style = MaterialTheme.typography.titleLarge.copy(textAlign = TextAlign.Center)
             )
         }
+
+        AnimatedVisibility(mqttConnectionState is MqttConnectionState.ConnectionError) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ){
+                TextButton(
+                    modifier = Modifier
+                        .fillMaxWidth(0.3f),
+                    onClick = {
+                        showErrorBottomSheet = true
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error,
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    )
+                ) {
+                    Text("Details")
+                }
+            }
+        }
+    }
+
+    if(showErrorBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                showErrorBottomSheet = false
+            }
+        ) {
+            exception?.also { e ->
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    text = e.cause?.toString() ?: "Unknow Reason"
+                )
+            }
+
+        }
     }
 
 }
+
 
 @Preview
 @Composable
@@ -138,7 +200,7 @@ private fun InfoCardPreview() {
     SensorSpotTheme {
         Surface {
             ConnectionStatusCard(
-                mqttConnectionState = MqttConnectionState.Connected,
+                mqttConnectionState = MqttConnectionState.ConnectionError(),
                 time = ElapsedTime(10, 20, 30)
             )
         }
