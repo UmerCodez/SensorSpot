@@ -74,11 +74,11 @@ fun ConnectionStatusCard(
                     .fillMaxSize()
                     .padding(10.dp),
                 imageVector = when(mqttConnectionState){
-                    MqttConnectionState.CONNECTING -> Icons.Filled.Info
-                    MqttConnectionState.CONNECTED -> Icons.Filled.CheckCircle
-                    MqttConnectionState.DISCONNECTED -> Icons.Filled.Info
-                    MqttConnectionState.CONNECTION_ERROR -> Icons.Filled.Warning
-                    MqttConnectionState.CONNECTION_TIMEOUT -> Icons.Filled.Warning
+                    is MqttConnectionState.Connecting -> Icons.Filled.Info
+                    is MqttConnectionState.Connected -> Icons.Filled.CheckCircle
+                    is MqttConnectionState.Disconnected -> Icons.Filled.Info
+                    is MqttConnectionState.ConnectionError -> Icons.Filled.Warning
+                    is MqttConnectionState.ConnectionTimeout -> Icons.Filled.Warning
                 },
                 contentDescription = null
             )
@@ -93,7 +93,13 @@ fun ConnectionStatusCard(
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
                 BasicText(
-                    text = mqttConnectionState.name.toString().replace("_", " "),
+                    text = when(mqttConnectionState){
+                        is MqttConnectionState.Connecting -> "CONNECTING"
+                        is MqttConnectionState.Connected -> "CONNECTED"
+                        is MqttConnectionState.Disconnected -> "DISCONNECTED"
+                        is MqttConnectionState.ConnectionError -> "CONNECTION ERROR"
+                        is MqttConnectionState.ConnectionTimeout -> "CONNECTION TIMEOUT"
+                    },
                     style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface),
                     modifier = Modifier.padding(horizontal = 10.dp),
                     maxLines = 1,
@@ -109,12 +115,12 @@ fun ConnectionStatusCard(
                     .fillMaxSize()
                     .padding(10.dp),
             ){
-                if(mqttConnectionState == MqttConnectionState.CONNECTING){
+                if(mqttConnectionState == MqttConnectionState.Connecting){
                     CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
             }
         }
-        AnimatedVisibility(mqttConnectionState == MqttConnectionState.CONNECTED) {
+        AnimatedVisibility(mqttConnectionState == MqttConnectionState.Connected) {
             Text(
                 modifier = Modifier.fillMaxWidth().padding(10.dp),
                 text = time.toString(),
@@ -132,7 +138,7 @@ private fun InfoCardPreview() {
     SensorSpotTheme {
         Surface {
             ConnectionStatusCard(
-                mqttConnectionState = MqttConnectionState.CONNECTED,
+                mqttConnectionState = MqttConnectionState.Connected,
                 time = ElapsedTime(10, 20, 30)
             )
         }

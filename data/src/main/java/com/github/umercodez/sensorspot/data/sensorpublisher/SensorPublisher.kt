@@ -51,12 +51,12 @@ import java.net.SocketTimeoutException
 import java.util.UUID
 
 
-enum class MqttConnectionState{
-    CONNECTING,
-    CONNECTED,
-    DISCONNECTED,
-    CONNECTION_ERROR,
-    CONNECTION_TIMEOUT
+sealed interface MqttConnectionState{
+    data object Connecting: MqttConnectionState
+    data object Connected: MqttConnectionState
+    data object Disconnected: MqttConnectionState
+    data class ConnectionError(val exception: Throwable? = null): MqttConnectionState
+    data object ConnectionTimeout: MqttConnectionState
 }
 
 class SensorPublisher(
@@ -140,7 +140,7 @@ class SensorPublisher(
             }
         }
 
-        _mqttConnectionState.emit(MqttConnectionState.CONNECTING)
+        _mqttConnectionState.emit(MqttConnectionState.Connecting)
 
         val broker = if (mqttConfig.useSSL) {
             if (mqttConfig.useWebsocket)
@@ -184,13 +184,13 @@ class SensorPublisher(
 
                     if(exception is SocketTimeoutException) {
                         scope?.launch {
-                            _mqttConnectionState.emit(MqttConnectionState.CONNECTION_TIMEOUT)
+                            _mqttConnectionState.emit(MqttConnectionState.ConnectionTimeout)
                         }
                     }
 
                     else {
                         scope?.launch {
-                            _mqttConnectionState.emit(MqttConnectionState.CONNECTION_ERROR)
+                            _mqttConnectionState.emit(MqttConnectionState.ConnectionError(exception))
                         }
                     }
                     exception?.printStackTrace()
@@ -202,7 +202,7 @@ class SensorPublisher(
         } catch (e: MqttException) {
             e.printStackTrace()
             scope?.launch {
-                _mqttConnectionState.emit(MqttConnectionState.CONNECTION_ERROR)
+                _mqttConnectionState.emit(MqttConnectionState.ConnectionError(e))
             }
         }
 
@@ -212,7 +212,7 @@ class SensorPublisher(
         Log.d(tag, "connectComplete()")
         clock.start()
         scope?.launch {
-            _mqttConnectionState.emit(MqttConnectionState.CONNECTED)
+            _mqttConnectionState.emit(MqttConnectionState.Connected)
         }
         sensorEventProvider?.provideEventsFor(sensorIntTypes,sensorSamplingRate)
     }
@@ -221,7 +221,7 @@ class SensorPublisher(
         Log.d(tag, "disconnected()")
         clock.reset()
         scope?.launch {
-            _mqttConnectionState.emit(MqttConnectionState.DISCONNECTED)
+            _mqttConnectionState.emit(MqttConnectionState.Disconnected)
         }
         sensorEventProvider?.stopProvidingEvents()
         disconnectResponse?.reasonString?.also { println(it) }
@@ -231,7 +231,7 @@ class SensorPublisher(
         Log.d(tag, "mqttErrorOccurred()")
         clock.reset()
         scope?.launch {
-            _mqttConnectionState.emit(MqttConnectionState.CONNECTION_ERROR)
+            _mqttConnectionState.emit(MqttConnectionState.ConnectionError(exception))
         }
         exception?.printStackTrace()
     }
@@ -253,14 +253,14 @@ class SensorPublisher(
 
             mqttAsyncClient?.disconnect()
             mqttAsyncClient?.close()
-            _mqttConnectionState.emit(MqttConnectionState.DISCONNECTED)
+            _mqttConnectionState.emit(MqttConnectionState.Disconnected)
             sensorEventProvider?.stopProvidingEvents()
             gpsDataProvider?.stopProvidingGpsData()
             clock.reset()
 
         } catch (e: Exception) {
             e.printStackTrace()
-            _mqttConnectionState.emit(MqttConnectionState.CONNECTION_ERROR)
+            _mqttConnectionState.emit(MqttConnectionState.ConnectionError(e))
         }
     }
 

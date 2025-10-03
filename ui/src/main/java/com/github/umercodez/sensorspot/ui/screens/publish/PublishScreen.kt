@@ -113,7 +113,7 @@ fun PublishScreenPreview() {
             PublishScreen(
                 state = PublishScreenState(
                     mqttConfig = MqttConfig(),
-                    mqttConnectionState = MqttConnectionState.CONNECTED
+                    mqttConnectionState = MqttConnectionState.Connected
                 ),
                 onEvent = {}
             )

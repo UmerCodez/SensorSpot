@@ -108,7 +108,7 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         scope.launch {
             sensorPublisher.mqttConnectionState.collect{ connectionState ->
                 Log.d(TAG, "connection State: $connectionState")
-                if(connectionState == MqttConnectionState.CONNECTED){
+                if(connectionState == MqttConnectionState.Connected){
                     isConnected = true
                     // MainActivity lies in the app module. This service lies in the data module.
                     // To call MainActivity from this module, we use an implicit intent
@@ -145,7 +145,7 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
 
                     startForeground(ON_GOING_NOTIFICATION_ID, notification)
 
-                } else if (connectionState == MqttConnectionState.DISCONNECTED || connectionState == MqttConnectionState.CONNECTION_ERROR || connectionState == MqttConnectionState.CONNECTION_TIMEOUT){
+                } else if (connectionState == MqttConnectionState.Disconnected || connectionState is MqttConnectionState.ConnectionError || connectionState == MqttConnectionState.ConnectionTimeout){
                     Log.d(TAG, "stopForeground()")
                     stopForeground()
                     isConnected = false

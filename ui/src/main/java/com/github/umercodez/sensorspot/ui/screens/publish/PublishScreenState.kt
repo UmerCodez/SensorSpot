@@ -23,7 +23,7 @@ import com.github.umercodez.sensorspot.data.sensorpublisher.MqttConfig
 import com.github.umercodez.sensorspot.data.sensorpublisher.MqttConnectionState
 
 data class PublishScreenState(
-    val mqttConnectionState: MqttConnectionState = MqttConnectionState.DISCONNECTED,
+    val mqttConnectionState: MqttConnectionState = MqttConnectionState.Disconnected,
     val mqttConfig: MqttConfig = MqttConfig(),
     val elapsedTime : ElapsedTime = ElapsedTime(0,0,0)
 )

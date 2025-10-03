@@ -46,19 +46,19 @@ fun ConnectionControllerButton(
     Button(
         modifier = modifier.aspectRatio(1f),
         onClick = {
-            if(mqttConnectionState != MqttConnectionState.CONNECTED){
+            if(mqttConnectionState != MqttConnectionState.Connected){
                 onPublishClick?.invoke()
             }
 
-            if(mqttConnectionState == MqttConnectionState.CONNECTED){
+            if(mqttConnectionState == MqttConnectionState.Connected){
                 onStopClick?.invoke()
             }
         },
-        enabled = mqttConnectionState != MqttConnectionState.CONNECTING
+        enabled = mqttConnectionState != MqttConnectionState.Connecting
     ) {
 
         when(mqttConnectionState) {
-            MqttConnectionState.CONNECTED -> {
+            MqttConnectionState.Connected -> {
                 Icon(
                     modifier = Modifier.fillMaxSize(0.8f),
                     painter = painterResource(R.drawable.mode_off_on_24dp),
@@ -91,7 +91,7 @@ fun ConnectionControllerButton(
 private fun MyButtonPreview() {
     SensorSpotTheme {
         ConnectionControllerButton(
-            mqttConnectionState = MqttConnectionState.DISCONNECTED,
+            mqttConnectionState = MqttConnectionState.Disconnected,
         )
     }
 }
