@@ -72,5 +72,6 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(project(":ui"))
     implementation(project(":data"))
+    debugImplementation(libs.leakcanary.android)
 
 }
