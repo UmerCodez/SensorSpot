@@ -1,0 +1,1 @@
+Filtered out one-shot sensors from available sensors list
