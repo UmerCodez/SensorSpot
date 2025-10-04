@@ -52,7 +52,7 @@ class SensorsRepositoryImp(
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
     override fun getAvailableSensors(): List<DeviceSensor> {
-        return sensorManager.getSensorList(Sensor.TYPE_ALL).toDeviceSensors()
+        return sensorManager.getSensorList(Sensor.TYPE_ALL).filter{ it.reportingMode != Sensor.REPORTING_MODE_ONE_SHOT}.toDeviceSensors()
     }
 
     override fun getSensor(sensorType: Int): DeviceSensor {
