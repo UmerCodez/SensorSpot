@@ -18,19 +18,14 @@
  */
 package com.github.umercodez.sensorspot.data.sensorpublisher
 
-import android.content.Context
 import android.util.Log
 import com.github.umercodez.sensorspot.data.clock.Clock
 import com.github.umercodez.sensorspot.data.clock.ElapsedTime
 import com.github.umercodez.sensorspot.data.gpsdataprovider.GpsDataProvider
-import com.github.umercodez.sensorspot.data.gpsdataprovider.GpsDataProviderImp
 import com.github.umercodez.sensorspot.data.sensoreventprovider.SensorEventProvider
-import com.github.umercodez.sensorspot.data.sensoreventprovider.SensorEventProviderImp
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -42,7 +37,6 @@ import org.eclipse.paho.mqttv5.client.MqttAsyncClient
 import org.eclipse.paho.mqttv5.client.MqttCallback
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.MqttDisconnectResponse
-
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
 import org.eclipse.paho.mqttv5.common.MqttException
 import org.eclipse.paho.mqttv5.common.MqttMessage
@@ -60,8 +54,10 @@ sealed interface MqttConnectionState{
 }
 
 class SensorPublisher(
-    private val context: Context,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val scope: CoroutineScope,
+    private val sensorEventProvider: SensorEventProvider,
+    private val gpsDataProvider: GpsDataProvider
 ) : MqttCallback {
 
     private val tag = "SensorPublisher"
@@ -70,9 +66,6 @@ class SensorPublisher(
     private var mqttAsyncClient: MqttAsyncClient? = null
     private var memoryPersistence: MemoryPersistence? = null
     private var connectionOptions: MqttConnectionOptions? = null
-    private var scope: CoroutineScope? = null
-    private var sensorEventProvider: SensorEventProvider? = null
-    private var gpsDataProvider: GpsDataProvider? = null
 
     private val clock = Clock()
     val elapsedTime : SharedFlow<ElapsedTime> get() = clock.time
@@ -80,8 +73,8 @@ class SensorPublisher(
 
     var sensorIntTypes: List<Int>
         set(sensorTypes) {
-            sensorEventProvider?.stopProvidingEvents()
-            sensorEventProvider?.provideEventsFor(sensorTypes, sensorSamplingRate)
+            sensorEventProvider.stopProvidingEvents()
+            sensorEventProvider.provideEventsFor(sensorTypes, sensorSamplingRate)
         }
         get() = sensorIntTypes
 
@@ -91,20 +84,8 @@ class SensorPublisher(
 
     suspend fun connectAndPublish(mqttConfig: MqttConfig) = withContext(ioDispatcher){
 
-        if(scope == null) {
-            scope = CoroutineScope(SupervisorJob() + ioDispatcher)
-        }
-
-        if(sensorEventProvider == null){
-            sensorEventProvider = SensorEventProviderImp(context)
-        }
-
-        if(gpsDataProvider == null){
-            gpsDataProvider = GpsDataProviderImp(context)
-        }
-
-        scope?.launch {
-            sensorEventProvider?.events?.collect{ sensorEvent ->
+        scope.launch {
+            sensorEventProvider.events.collect{ sensorEvent ->
 
                 try {
 
@@ -121,8 +102,8 @@ class SensorPublisher(
             }
         }
 
-        scope?.launch {
-            gpsDataProvider?.gpsData?.collect { gpsData ->
+        scope.launch {
+            gpsDataProvider.gpsData.collect { gpsData ->
 
                 try {
 
@@ -183,13 +164,13 @@ class SensorPublisher(
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
 
                     if(exception is SocketTimeoutException) {
-                        scope?.launch {
+                        scope.launch {
                             _mqttConnectionState.emit(MqttConnectionState.ConnectionTimeout)
                         }
                     }
 
                     else {
-                        scope?.launch {
+                        scope.launch {
                             _mqttConnectionState.emit(MqttConnectionState.ConnectionError(exception))
                         }
                     }
@@ -201,7 +182,7 @@ class SensorPublisher(
 
         } catch (e: MqttException) {
             e.printStackTrace()
-            scope?.launch {
+            scope.launch {
                 _mqttConnectionState.emit(MqttConnectionState.ConnectionError(e))
             }
         }
@@ -211,26 +192,26 @@ class SensorPublisher(
     override fun connectComplete(reconnect: Boolean, serverURI: String?) {
         Log.d(tag, "connectComplete()")
         clock.start()
-        scope?.launch {
+        scope.launch {
             _mqttConnectionState.emit(MqttConnectionState.Connected)
         }
-        sensorEventProvider?.provideEventsFor(sensorIntTypes,sensorSamplingRate)
+        sensorEventProvider.provideEventsFor(sensorIntTypes,sensorSamplingRate)
     }
 
     override fun disconnected(disconnectResponse: MqttDisconnectResponse?) {
         Log.d(tag, "disconnected()")
         clock.reset()
-        scope?.launch {
+        scope.launch {
             _mqttConnectionState.emit(MqttConnectionState.Disconnected)
         }
-        sensorEventProvider?.stopProvidingEvents()
+        sensorEventProvider.stopProvidingEvents()
         disconnectResponse?.reasonString?.also { println(it) }
     }
 
     override fun mqttErrorOccurred(exception: MqttException?) {
         Log.d(tag, "mqttErrorOccurred()")
         clock.reset()
-        scope?.launch {
+        scope.launch {
             _mqttConnectionState.emit(MqttConnectionState.ConnectionError(exception))
         }
         exception?.printStackTrace()
@@ -254,8 +235,8 @@ class SensorPublisher(
             mqttAsyncClient?.disconnect()
             mqttAsyncClient?.close()
             _mqttConnectionState.emit(MqttConnectionState.Disconnected)
-            sensorEventProvider?.stopProvidingEvents()
-            gpsDataProvider?.stopProvidingGpsData()
+            sensorEventProvider.stopProvidingEvents()
+            gpsDataProvider.stopProvidingGpsData()
             clock.reset()
 
         } catch (e: Exception) {
@@ -265,20 +246,19 @@ class SensorPublisher(
     }
 
     fun provideGpsData(){
-        gpsDataProvider?.startProvidingGpsData()
+        gpsDataProvider.startProvidingGpsData()
     }
 
     fun stopProvidingGpsData(){
-        gpsDataProvider?.stopProvidingGpsData()
+        gpsDataProvider.stopProvidingGpsData()
     }
 
     fun cleanUp(){
-        scope?.cancel()
-        sensorEventProvider?.stopProvidingEvents()
-        sensorEventProvider?.cleanUp()
+        sensorEventProvider.stopProvidingEvents()
+        sensorEventProvider.cleanUp()
 
-        gpsDataProvider?.startProvidingGpsData()
-        gpsDataProvider?.cleanUp()
+        gpsDataProvider.startProvidingGpsData()
+        gpsDataProvider.cleanUp()
     }
 
 }

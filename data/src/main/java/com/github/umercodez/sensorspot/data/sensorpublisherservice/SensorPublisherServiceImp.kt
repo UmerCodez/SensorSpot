@@ -34,8 +34,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.github.umercodez.sensorspot.data.R
 import com.github.umercodez.sensorspot.data.clock.ElapsedTime
+import com.github.umercodez.sensorspot.data.gpsdataprovider.GpsDataProviderImp
 import com.github.umercodez.sensorspot.data.repositories.settings.SettingsRepository
 import com.github.umercodez.sensorspot.data.repositories.settings.sensor.SensorsRepository
+import com.github.umercodez.sensorspot.data.sensoreventprovider.SensorEventProviderImp
 import com.github.umercodez.sensorspot.data.sensorpublisher.MqttConfig
 import com.github.umercodez.sensorspot.data.sensorpublisher.MqttConnectionState
 import com.github.umercodez.sensorspot.data.sensorpublisher.SensorPublisher
@@ -79,7 +81,9 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         Log.d(TAG, "onCreate()")
         createNotificationChannel()
         sensorPublisher = SensorPublisher(
-            context = applicationContext,
+            scope = scope,
+            sensorEventProvider = SensorEventProviderImp(applicationContext),
+            gpsDataProvider = GpsDataProviderImp(applicationContext)
         )
     }
 
