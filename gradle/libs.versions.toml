@@ -1,5 +1,6 @@
 [versions]
 agp = "8.11.1" # Fdroid can't build apps with agp 8.12.0+ see issue https://forum.f-droid.org/t/f-droid-build-servers-cant-build-modern-android-apps-due-to-outdated-cpus/33065/21
+composeWebview = "0.33.6"
 kotlin = "2.2.20"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -21,6 +22,7 @@ leakcanaryAndroid = "3.0-alpha-8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+compose-webview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.accompanist.permissions)
+    implementation(libs.compose.webview)
     implementation(project(":data"))
 
     implementation(libs.hilt.android)
