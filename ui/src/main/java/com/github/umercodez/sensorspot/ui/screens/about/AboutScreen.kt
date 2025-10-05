@@ -105,7 +105,7 @@ fun AboutScreen() {
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.8f),
-            headlineContent = { Text("Feed Back") },
+            headlineContent = { Text("Email") },
             supportingContent = { Text("umerfarooq2383@gmail.com") },
             leadingContent = {
                 Icon(
