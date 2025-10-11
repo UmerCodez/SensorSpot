@@ -19,6 +19,6 @@
 package com.github.umercodez.sensorspot.ui.screens.publish
 
 sealed interface PublishScreenEvent {
-    data object OnPublishClick : PublishScreenEvent
+    data object OnConnectClick : PublishScreenEvent
     data object OnStopClick : PublishScreenEvent
 }

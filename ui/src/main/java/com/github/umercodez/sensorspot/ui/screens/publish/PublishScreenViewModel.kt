@@ -89,7 +89,7 @@ class PublishScreenViewModel @Inject constructor(
 
     fun onEvent(event: PublishScreenEvent) {
         when (event) {
-            is PublishScreenEvent.OnPublishClick -> {
+            is PublishScreenEvent.OnConnectClick -> {
                 sensorPublisherService?.startPublishing()
             }
 

@@ -93,7 +93,7 @@ fun PublishScreen(
                 .size(150.dp),
             mqttConnectionState = state.mqttConnectionState,
             onPublishClick = {
-                onEvent(PublishScreenEvent.OnPublishClick)
+                onEvent(PublishScreenEvent.OnConnectClick)
             },
             onStopClick = {
                 onEvent(PublishScreenEvent.OnStopClick)
