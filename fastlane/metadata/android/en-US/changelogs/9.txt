@@ -1,0 +1,1 @@
+Added ACCESS_BACKGROUND_LOCATION permission
