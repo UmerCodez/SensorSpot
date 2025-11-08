@@ -26,6 +26,7 @@ object MqttConfigDefaults{
     const val BROKER_PORT = 1883
     const val QOS = 0
     const val TOPIC = "android/sensor"
+    const val DEDICATED_TOPICS = false
     const val CONNECTION_TIMEOUT_SECS = 5
     const val USE_CREDENTIALS = false
     const val USER_NAME = ""
@@ -40,6 +41,7 @@ data class MqttConfig(
     val brokerPort: Int = MqttConfigDefaults.BROKER_PORT,
     val qos: Int = MqttConfigDefaults.QOS,
     val topic: String = MqttConfigDefaults.TOPIC,
+    val dedicatedTopics: Boolean = MqttConfigDefaults.DEDICATED_TOPICS,
     val connectionTimeoutSecs: Int = MqttConfigDefaults.CONNECTION_TIMEOUT_SECS,
     val useCredentials: Boolean = MqttConfigDefaults.USE_CREDENTIALS,
     val userName: String = MqttConfigDefaults.USER_NAME,
@@ -54,6 +56,7 @@ data class MqttConfig(
                 brokerPort = settings.brokerPort,
                 qos = settings.qos,
                 topic = settings.topic,
+                dedicatedTopics = settings.dedicatedTopics,
                 connectionTimeoutSecs = settings.connectionTimeoutSecs,
                 useCredentials = settings.useCredentials,
                 userName = settings.userName,

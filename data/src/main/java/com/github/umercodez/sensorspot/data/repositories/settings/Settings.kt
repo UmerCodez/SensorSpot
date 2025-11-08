@@ -29,6 +29,7 @@ data class Settings(
     val brokerPort: Int,
     val qos: Int,
     val topic: String,
+    val dedicatedTopics: Boolean,
     val connectionTimeoutSecs: Int,
     val useCredentials: Boolean,
     val userName: String,

@@ -82,6 +82,13 @@ class SensorPublisher(
     val mqttConnectionState = _mqttConnectionState.asSharedFlow()
 
 
+    private fun getTopic(mqttConfig: MqttConfig, sensorType: String ) : String {
+        return if(mqttConfig.dedicatedTopics){
+            "${mqttConfig.topic}/$sensorType"
+        } else {
+            mqttConfig.topic
+        }
+    }
     suspend fun connectAndPublish(mqttConfig: MqttConfig) = withContext(ioDispatcher){
 
         scope.launch {
@@ -93,7 +100,7 @@ class SensorPublisher(
                         val message = MqttMessage(sensorEvent.toJson().toByteArray()).apply {
                             qos = mqttConfig.qos
                         }
-                        mqttAsyncClient?.publish(mqttConfig.topic, message)
+                        mqttAsyncClient?.publish(getTopic(mqttConfig, sensorEvent.type), message)
                     }
 
                 } catch (e: MqttException) {
@@ -111,7 +118,7 @@ class SensorPublisher(
                         val message = MqttMessage(gpsData.toJson().toByteArray()).apply {
                             qos = mqttConfig.qos
                         }
-                        mqttAsyncClient?.publish(mqttConfig.topic, message)
+                        mqttAsyncClient?.publish(getTopic(mqttConfig, gpsData.type), message)
                     }
 
                 } catch (e: MqttException) {

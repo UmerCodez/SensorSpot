@@ -86,6 +86,13 @@ class SettingsScreenViewModel @Inject constructor(
                     }
                 }
             }
+            is SettingsScreenEvent.OnDedicatedTopicsChange -> {
+                viewModelScope.launch {
+                    settingsRepository.updateSettings {
+                        it.copy(dedicatedTopics = event.dedicatedTopics)
+                    }
+                }
+            }
             is SettingsScreenEvent.OnUseCredentialsChange -> {
                 viewModelScope.launch {
                     settingsRepository.updateSettings {

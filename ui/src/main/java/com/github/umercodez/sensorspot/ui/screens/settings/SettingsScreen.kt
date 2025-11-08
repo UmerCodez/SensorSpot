@@ -96,6 +96,17 @@ fun SettingsScreen(
         )
 
         ListItem(
+            headlineContent = { Text("Dedicated topics") },
+            supportingContent = { Text("use different topic for each sensor") },
+            trailingContent = {
+                Switch(
+                    checked = state.mqttConfig.dedicatedTopics,
+                    onCheckedChange = { onEvent(SettingsScreenEvent.OnDedicatedTopicsChange(it)) }
+                )
+            }
+        )
+
+        ListItem(
             headlineContent = { Text("Qos") },
             trailingContent = {
                 SingleChoiceSegmentedButtonRow {
