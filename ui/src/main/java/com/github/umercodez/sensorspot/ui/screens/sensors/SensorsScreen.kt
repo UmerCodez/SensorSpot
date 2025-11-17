@@ -80,6 +80,7 @@ fun SensorsScreen(
             SensorItem(
                 modifier = Modifier.animateItem(),
                 sensor = sensor,
+                dedicatedTopics = state.dedicatedTopics,
                 checked = state.sensorSelectionState[sensor] == true,
                 onCheckedChange = {
                     onEvent(SensorsScreenEvent.OnSensorItemCheckedChange(sensor, it))
@@ -89,6 +90,7 @@ fun SensorsScreen(
         item {
             GpsItem(
                 checked = state.gpsChecked,
+                dedicatedTopics = state.dedicatedTopics,
                 onCheckedChange = {
                     onEvent(SensorsScreenEvent.OnGpsItemCheckedChange(it))
                 },

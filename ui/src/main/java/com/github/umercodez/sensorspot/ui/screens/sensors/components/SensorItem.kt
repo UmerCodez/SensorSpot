@@ -52,6 +52,7 @@ import com.github.umercodez.sensorspot.ui.SensorSpotTheme
 @Composable
 fun SensorItem(
     sensor: DeviceSensor,
+    dedicatedTopics: Boolean = false,
     modifier: Modifier = Modifier,
     checked: Boolean = false,
     onCheckedChange: (Boolean) -> Unit
@@ -67,8 +68,9 @@ fun SensorItem(
         ListItem(
             headlineContent = { Text(text = sensor.name) },
             supportingContent = {
+                val prefix = if (dedicatedTopics) "topic = android/sensor/" else "type = "
                 BasicText(
-                    text = "type = ${sensor.stringType}",
+                    text = "$prefix${sensor.stringType}",
                     style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,

@@ -25,6 +25,7 @@ import com.github.umercodez.sensorspot.ui.SensorSpotTheme
 @Composable
 fun GpsItem(
     checked: Boolean,
+    dedicatedTopics: Boolean = false,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     locationPermissionGranted: Boolean = false,
@@ -55,8 +56,9 @@ fun GpsItem(
             }
         },
         supportingContent = {
+            val prefix = if (dedicatedTopics) "topic = android/sensor/" else "type = "
             Text(
-                text = "type = android.gps",
+                text = prefix + "android.gps",
                 color = MaterialTheme.colorScheme.onSurface
             )
         },
