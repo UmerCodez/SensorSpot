@@ -97,7 +97,7 @@ class SensorPublisher(
                 try {
 
                     if(mqttAsyncClient?.isConnected == true) {
-                        val message = MqttMessage(sensorEvent.toJson().toByteArray()).apply {
+                        val message = MqttMessage(sensorEvent.toJson(!mqttConfig.dedicatedTopics).toByteArray()).apply {
                             qos = mqttConfig.qos
                         }
                         mqttAsyncClient?.publish(getTopic(mqttConfig, sensorEvent.type), message)
@@ -115,7 +115,7 @@ class SensorPublisher(
                 try {
 
                     if(mqttAsyncClient?.isConnected == true) {
-                        val message = MqttMessage(gpsData.toJson().toByteArray()).apply {
+                        val message = MqttMessage(gpsData.toJson(!mqttConfig.dedicatedTopics).toByteArray()).apply {
                             qos = mqttConfig.qos
                         }
                         mqttAsyncClient?.publish(getTopic(mqttConfig, gpsData.type), message)

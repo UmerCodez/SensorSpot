@@ -20,7 +20,7 @@ package com.github.umercodez.sensorspot.data.sensoreventprovider
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import org.json.JSONObject
 
 @Serializable
 data class SensorEvent(
@@ -28,7 +28,14 @@ data class SensorEvent(
     val values: List<Float>,
     val timestamp: Long
 ){
-    fun toJson() = Json.encodeToString(this)
+    fun toJson(includeType: Boolean = true): String {
+        val json = mapOf(
+            "type" to if (includeType) type else null,
+            "values" to values,
+            "timestamp" to timestamp
+        ).filterValues { it != null }
+        return JSONObject(json).toString()
+    }
 }
 interface SensorEventProvider {
     val events: Flow<SensorEvent>
