@@ -53,6 +53,7 @@ import com.github.umercodez.sensorspot.ui.SensorSpotTheme
 fun SensorItem(
     sensor: DeviceSensor,
     dedicatedTopics: Boolean = false,
+    mqttTopic: String = "android/sensor",
     modifier: Modifier = Modifier,
     checked: Boolean = false,
     onCheckedChange: (Boolean) -> Unit
@@ -68,9 +69,13 @@ fun SensorItem(
         ListItem(
             headlineContent = { Text(text = sensor.name) },
             supportingContent = {
-                val prefix = if (dedicatedTopics) "topic = android/sensor/" else "type = "
+                val subText = if (dedicatedTopics) {
+                    "topic = ${mqttTopic}/${sensor.stringType.split('.').last()}"
+                } else {
+                    "type = ${sensor.stringType}"
+                }
                 BasicText(
-                    text = "$prefix${sensor.stringType}",
+                    text = subText,
                     style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,

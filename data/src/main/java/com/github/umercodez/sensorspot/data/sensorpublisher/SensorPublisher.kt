@@ -43,6 +43,7 @@ import org.eclipse.paho.mqttv5.common.MqttMessage
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties
 import java.net.SocketTimeoutException
 import java.util.UUID
+import kotlin.text.split
 
 
 sealed interface MqttConnectionState{
@@ -84,7 +85,7 @@ class SensorPublisher(
 
     private fun getTopic(mqttConfig: MqttConfig, sensorType: String ) : String {
         return if(mqttConfig.dedicatedTopics){
-            "${mqttConfig.topic}/$sensorType"
+            "${mqttConfig.topic}/${sensorType.split('.').last()}"
         } else {
             mqttConfig.topic
         }

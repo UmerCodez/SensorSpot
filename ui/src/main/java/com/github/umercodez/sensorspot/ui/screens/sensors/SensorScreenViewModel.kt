@@ -64,7 +64,10 @@ class SensorScreenViewModel @Inject constructor(
         viewModelScope.launch {
             settingsRepository.settings.collect { settings ->
                 _uiState.update {
-                    it.copy(dedicatedTopics = settings.dedicatedTopics)
+                    it.copy(
+                        dedicatedTopics = settings.dedicatedTopics,
+                        mqttTopic = settings.topic
+                    )
                 }
             }
         }
