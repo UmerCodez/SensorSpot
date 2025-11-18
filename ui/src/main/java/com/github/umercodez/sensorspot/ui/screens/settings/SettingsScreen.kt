@@ -92,7 +92,7 @@ fun SettingsScreen(
             isError = { value ->
                 value.isEmpty()
             },
-            onUpdateClick = { onEvent(SettingsScreenEvent.OnBrokerPortChange(it.toInt())) },
+            onUpdateClick = { onEvent(SettingsScreenEvent.OnTopicChange(it)) }
         )
 
         ListItem(
