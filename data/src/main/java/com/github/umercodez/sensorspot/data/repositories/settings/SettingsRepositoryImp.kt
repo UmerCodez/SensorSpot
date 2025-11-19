@@ -53,6 +53,7 @@ class SettingsRepositoryImp(
         val USE_CREDENTIALS = booleanPreferencesKey("use_credentials")
         val QOS = intPreferencesKey("qos")
         val TOPIC = stringPreferencesKey("topic")
+        val DEDICATED_TOPICS = booleanPreferencesKey("dedicated_topics")
         val CONNECTION_TIMEOUT_SECS = intPreferencesKey("connection_timeout_secs")
         val SENSOR_SAMPLING_RATE = intPreferencesKey("sensor_sampling_rate")
     }
@@ -69,6 +70,7 @@ class SettingsRepositoryImp(
                 useCredentials = pref[Key.USE_CREDENTIALS] ?: MqttConfigDefaults.USE_CREDENTIALS,
                 qos = pref[Key.QOS] ?: MqttConfigDefaults.QOS,
                 topic = pref[Key.TOPIC] ?: MqttConfigDefaults.TOPIC,
+                dedicatedTopics = pref[Key.DEDICATED_TOPICS] ?: MqttConfigDefaults.DEDICATED_TOPICS,
                 connectionTimeoutSecs = pref[Key.CONNECTION_TIMEOUT_SECS]
                     ?: MqttConfigDefaults.CONNECTION_TIMEOUT_SECS,
                 sensorSamplingRate = pref[Key.SENSOR_SAMPLING_RATE]
@@ -94,6 +96,7 @@ class SettingsRepositoryImp(
             pref[Key.USE_CREDENTIALS] = settings.useCredentials
             pref[Key.QOS] = settings.qos
             pref[Key.TOPIC] = settings.topic
+            pref[Key.DEDICATED_TOPICS] = settings.dedicatedTopics
             pref[Key.CONNECTION_TIMEOUT_SECS] = settings.connectionTimeoutSecs
         }
 

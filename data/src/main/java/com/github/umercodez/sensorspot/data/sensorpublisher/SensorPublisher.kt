@@ -43,6 +43,7 @@ import org.eclipse.paho.mqttv5.common.MqttMessage
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties
 import java.net.SocketTimeoutException
 import java.util.UUID
+import kotlin.text.split
 
 
 sealed interface MqttConnectionState{
@@ -82,6 +83,13 @@ class SensorPublisher(
     val mqttConnectionState = _mqttConnectionState.asSharedFlow()
 
 
+    private fun getTopic(mqttConfig: MqttConfig, sensorType: String ) : String {
+        return if(mqttConfig.dedicatedTopics){
+            "${mqttConfig.topic}/${ if (sensorType.contains(".")) sensorType.split('.').last() else sensorType}"
+        } else {
+            mqttConfig.topic
+        }
+    }
     suspend fun connectAndPublish(mqttConfig: MqttConfig) = withContext(ioDispatcher){
 
         scope.launch {
@@ -90,10 +98,10 @@ class SensorPublisher(
                 try {
 
                     if(mqttAsyncClient?.isConnected == true) {
-                        val message = MqttMessage(sensorEvent.toJson().toByteArray()).apply {
+                        val message = MqttMessage(sensorEvent.toJson(!mqttConfig.dedicatedTopics).toByteArray()).apply {
                             qos = mqttConfig.qos
                         }
-                        mqttAsyncClient?.publish(mqttConfig.topic, message)
+                        mqttAsyncClient?.publish(getTopic(mqttConfig, sensorEvent.type), message)
                     }
 
                 } catch (e: MqttException) {
@@ -108,10 +116,10 @@ class SensorPublisher(
                 try {
 
                     if(mqttAsyncClient?.isConnected == true) {
-                        val message = MqttMessage(gpsData.toJson().toByteArray()).apply {
+                        val message = MqttMessage(gpsData.toJson(!mqttConfig.dedicatedTopics).toByteArray()).apply {
                             qos = mqttConfig.qos
                         }
-                        mqttAsyncClient?.publish(mqttConfig.topic, message)
+                        mqttAsyncClient?.publish(getTopic(mqttConfig, gpsData.type), message)
                     }
 
                 } catch (e: MqttException) {

@@ -21,6 +21,7 @@ package com.github.umercodez.sensorspot.ui.screens.sensors
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.umercodez.sensorspot.data.repositories.settings.SettingsRepository
 import com.github.umercodez.sensorspot.data.repositories.settings.sensor.SensorsRepository
 import com.github.umercodez.sensorspot.data.utils.LocationPermissionUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +35,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SensorScreenViewModel @Inject constructor(
     private val sensorsRepository: SensorsRepository,
-    private val locationPermissionUtil: LocationPermissionUtil
+    private val locationPermissionUtil: LocationPermissionUtil,
+    private val settingsRepository: SettingsRepository
 ): ViewModel(){
 
     private val _uiState = MutableStateFlow(SensorsScreenState())
@@ -57,7 +59,17 @@ class SensorScreenViewModel @Inject constructor(
             _uiState.update {
                 it.copy(locationPermissionGranted = locationPermissionUtil.isLocationPermissionGranted())
             }
+        }
 
+        viewModelScope.launch {
+            settingsRepository.settings.collect { settings ->
+                _uiState.update {
+                    it.copy(
+                        dedicatedTopics = settings.dedicatedTopics,
+                        mqttTopic = settings.topic
+                    )
+                }
+            }
         }
 
     }

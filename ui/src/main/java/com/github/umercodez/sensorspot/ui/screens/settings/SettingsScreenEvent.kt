@@ -22,6 +22,7 @@ sealed interface SettingsScreenEvent {
     data class OnBrokerAddressChange(val brokerIp: String) : SettingsScreenEvent
     data class OnBrokerPortChange(val brokerPort: Int) : SettingsScreenEvent
     data class OnTopicChange(val topic: String) : SettingsScreenEvent
+    data class OnDedicatedTopicsChange(val dedicatedTopics: Boolean) : SettingsScreenEvent
     data class OnQosChange(val qos: Int) : SettingsScreenEvent
     data class OnUseSSLChange(val useSSL: Boolean) : SettingsScreenEvent
     data class OnUseWebsocketChange(val useWebsocket: Boolean) : SettingsScreenEvent

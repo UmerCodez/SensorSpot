@@ -28,5 +28,7 @@ data class SensorsScreenState(
     val allSensors: SnapshotStateList<DeviceSensor> = mutableStateListOf(),
     val sensorSelectionState: SnapshotStateMap<DeviceSensor, Boolean> = mutableStateMapOf(),
     val locationPermissionGranted: Boolean = false,
-    val gpsChecked: Boolean = false
+    val gpsChecked: Boolean = false,
+    val dedicatedTopics: Boolean = false,
+    val mqttTopic: String = "android/sensor",
 )
