@@ -190,6 +190,7 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         scope.launch {
             sensorPublisher.disconnect()
             isConnected = false
+            stopForeground()
         }
 
         mqttConnectionStateJob?.cancel()
