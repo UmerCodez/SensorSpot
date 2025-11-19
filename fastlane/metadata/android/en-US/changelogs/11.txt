@@ -1,0 +1,2 @@
+Feature: Added dedicated topics for each sensor
+fixed: https://github.com/UmerCodez/SensorSpot/issues/1
