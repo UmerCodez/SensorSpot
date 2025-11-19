@@ -70,7 +70,7 @@ fun SensorItem(
             headlineContent = { Text(text = sensor.name) },
             supportingContent = {
                 val subText = if (dedicatedTopics) {
-                    "topic = ${mqttTopic}/${sensor.stringType.split('.').last()}"
+                    "topic = ${mqttTopic}/${ if (sensor.stringType.contains(".")) sensor.stringType.split('.').last() else sensor.stringType}"
                 } else {
                     "type = ${sensor.stringType}"
                 }

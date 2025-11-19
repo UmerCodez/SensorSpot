@@ -85,7 +85,7 @@ class SensorPublisher(
 
     private fun getTopic(mqttConfig: MqttConfig, sensorType: String ) : String {
         return if(mqttConfig.dedicatedTopics){
-            "${mqttConfig.topic}/${sensorType.split('.').last()}"
+            "${mqttConfig.topic}/${ if (sensorType.contains(".")) sensorType.split('.').last() else sensorType}"
         } else {
             mqttConfig.topic
         }
