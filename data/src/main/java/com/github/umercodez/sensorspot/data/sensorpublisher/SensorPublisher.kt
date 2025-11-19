@@ -26,6 +26,7 @@ import com.github.umercodez.sensorspot.data.sensoreventprovider.SensorEventProvi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -67,6 +68,8 @@ class SensorPublisher(
     private var mqttAsyncClient: MqttAsyncClient? = null
     private var memoryPersistence: MemoryPersistence? = null
     private var connectionOptions: MqttConnectionOptions? = null
+    private var sensorEventCollectionJob: Job? = null
+    private var gpsDataCollectionJob: Job? = null
 
     private val clock = Clock()
     val elapsedTime : SharedFlow<ElapsedTime> get() = clock.time
@@ -92,13 +95,15 @@ class SensorPublisher(
     }
     suspend fun connectAndPublish(mqttConfig: MqttConfig) = withContext(ioDispatcher){
 
-        scope.launch {
-            sensorEventProvider.events.collect{ sensorEvent ->
+        sensorEventCollectionJob = scope.launch {
+            sensorEventProvider.events.collect { sensorEvent ->
 
                 try {
 
-                    if(mqttAsyncClient?.isConnected == true) {
-                        val message = MqttMessage(sensorEvent.toJson(!mqttConfig.dedicatedTopics).toByteArray()).apply {
+                    if (mqttAsyncClient?.isConnected == true) {
+                        val message = MqttMessage(
+                            sensorEvent.toJson(!mqttConfig.dedicatedTopics).toByteArray()
+                        ).apply {
                             qos = mqttConfig.qos
                         }
                         mqttAsyncClient?.publish(getTopic(mqttConfig, sensorEvent.type), message)
@@ -110,13 +115,15 @@ class SensorPublisher(
             }
         }
 
-        scope.launch {
+        gpsDataCollectionJob = scope.launch {
             gpsDataProvider.gpsData.collect { gpsData ->
 
                 try {
 
-                    if(mqttAsyncClient?.isConnected == true) {
-                        val message = MqttMessage(gpsData.toJson(!mqttConfig.dedicatedTopics).toByteArray()).apply {
+                    if (mqttAsyncClient?.isConnected == true) {
+                        val message = MqttMessage(
+                            gpsData.toJson(!mqttConfig.dedicatedTopics).toByteArray()
+                        ).apply {
                             qos = mqttConfig.qos
                         }
                         mqttAsyncClient?.publish(getTopic(mqttConfig, gpsData.type), message)
@@ -245,6 +252,8 @@ class SensorPublisher(
             _mqttConnectionState.emit(MqttConnectionState.Disconnected)
             sensorEventProvider.stopProvidingEvents()
             gpsDataProvider.stopProvidingGpsData()
+            sensorEventCollectionJob?.cancel()
+            gpsDataCollectionJob?.cancel()
             clock.reset()
 
         } catch (e: Exception) {
