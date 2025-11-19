@@ -19,10 +19,9 @@
 package com.github.umercodez.sensorspot.data.sensoreventprovider
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.serialization.Serializable
 import org.json.JSONObject
 
-@Serializable
+
 data class SensorEvent(
     val type: String,
     val values: List<Float>,
