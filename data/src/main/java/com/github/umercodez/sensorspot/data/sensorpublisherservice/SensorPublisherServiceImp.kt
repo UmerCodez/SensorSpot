@@ -44,6 +44,7 @@ import com.github.umercodez.sensorspot.data.sensorpublisher.SensorPublisher
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.SharedFlow
@@ -62,6 +63,9 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
 
     private lateinit var sensorPublisher: SensorPublisher
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var mqttConnectionStateJob: Job? = null
+    private var selectedSensorsJob: Job? = null
+    private var gpsSelectionStateJob: Job? = null
 
 
     override val mqttConnectionState: SharedFlow<MqttConnectionState>
@@ -109,7 +113,7 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         val mqttConfig = MqttConfig.fromSettings(settings)
 
 
-        scope.launch {
+        mqttConnectionStateJob = scope.launch {
             sensorPublisher.mqttConnectionState.collect{ connectionState ->
                 Log.d(TAG, "connection State: $connectionState")
                 if(connectionState == MqttConnectionState.Connected){
@@ -160,13 +164,13 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         sensorPublisher.sensorSamplingRate = settings.sensorSamplingRate
         sensorPublisher.connectAndPublish(mqttConfig)
 
-        scope.launch {
+       selectedSensorsJob = scope.launch {
             sensorsRepository.getSelectedSensorsAsFlow().collect { selectedSenors ->
                 sensorPublisher.sensorIntTypes = selectedSenors.map { it.type }
             }
         }
 
-        scope.launch {
+        gpsSelectionStateJob = scope.launch {
             sensorsRepository.gpsSelectionState.collect { isGpsSelected ->
 
                 if(!locationPermissionGranted)
@@ -185,7 +189,12 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
     override fun stopPublishing() {
         scope.launch {
             sensorPublisher.disconnect()
+            isConnected = false
         }
+
+        mqttConnectionStateJob?.cancel()
+        selectedSensorsJob?.cancel()
+        gpsSelectionStateJob?.cancel()
 
         stopSelf()
     }
