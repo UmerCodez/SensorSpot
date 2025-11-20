@@ -19,8 +19,10 @@ navigationCompose = "2.9.0"
 hiltNavigationCompose = "1.2.0"
 accompanistPermissions = "0.36.0"
 leakcanaryAndroid = "3.0-alpha-8"
+acra = "5.13.1"
 
 [libraries]
+acra-mail = { module = "ch.acra:acra-mail", version.ref = "acra" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 compose-webview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

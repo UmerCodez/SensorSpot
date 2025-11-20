@@ -19,7 +19,38 @@
 package com.github.umercodez.sensorspot
 
 import android.app.Application
+import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
+import org.acra.BuildConfig
+import org.acra.config.mailSender
+import org.acra.data.StringFormat
+import org.acra.ktx.initAcra
 
 @HiltAndroidApp
-class MyApplication: Application()
+class MyApplication: Application() {
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        initAcra {
+            //core configuration:
+            buildConfigClass = BuildConfig::class.java
+            reportFormat = StringFormat.JSON
+
+
+            mailSender {
+                //required
+                mailTo = "umerfarooq2383@gmail.com"
+                //defaults to true
+                reportAsFile = false
+                //defaults to ACRA-report.stacktrace
+                //reportFileName = "Crash.txt"
+                //defaults to "<applicationId> Crash Report"
+                subject = "SensorSpot Crash report"
+                //defaults to empty
+                //body = "Crash report attached"
+            }
+
+
+        }
+
+    }
+}

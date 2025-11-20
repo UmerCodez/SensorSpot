@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(project(":ui"))
     implementation(project(":data"))
+    implementation(libs.acra.mail)
     debugImplementation(libs.leakcanary.android)
 
 }
