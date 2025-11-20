@@ -33,7 +33,8 @@ The data is published to the topic `android/sensor` in the following JSON format
   "values": [0.31892395, -0.97802734, 10.049896]
 }
 ```
-This format is similar to one used in [SensaGram](https://github.com/UmerCodez/SensaGram)
+Note: If the **Dedicated Topics** option is enabled in the settings, the `type` field **will not be included** in the JSON payload. Each sensor will instead publish to its own topic. For example, accelerometer data will be sent to `android/sensor/accelerometer`.
+
 <div align="center">
    
 <img width="282" height="341" alt="image" src="https://github.com/user-attachments/assets/4742b447-3713-417a-b3aa-d06903f30a7a" />
