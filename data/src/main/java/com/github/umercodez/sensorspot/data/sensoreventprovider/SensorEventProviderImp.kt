@@ -25,6 +25,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Handler
 import android.os.HandlerThread
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -52,6 +53,8 @@ class SensorEventProviderImp(
     override val events: Flow<SensorEvent>
         get() = _events.asSharedFlow()
 
+    private val tag = SensorEventProviderImp::class.java.simpleName
+
 
     init {
         handlerThread.start()
@@ -66,9 +69,12 @@ class SensorEventProviderImp(
 
         for (sensorType in sensorTypes) {
             val sensor = sensorManager.getDefaultSensor(sensorType)
-                ?: throw IllegalArgumentException("Sensor not found")
 
-            sensorManager.registerListener(this,sensor,samplingRate,handler)
+
+            if(sensor != null)
+                sensorManager.registerListener(this, sensor, samplingRate, handler)
+            else
+                Log.d(tag, "Sensor not found")
 
         }
 
