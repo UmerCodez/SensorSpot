@@ -98,6 +98,7 @@ class SettingsRepositoryImp(
             pref[Key.TOPIC] = settings.topic
             pref[Key.DEDICATED_TOPICS] = settings.dedicatedTopics
             pref[Key.CONNECTION_TIMEOUT_SECS] = settings.connectionTimeoutSecs
+            pref[Key.SENSOR_SAMPLING_RATE] = settings.sensorSamplingRate
         }
 
     }
