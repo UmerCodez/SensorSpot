@@ -95,6 +95,9 @@ class SensorPublisher(
     }
     suspend fun connectAndPublish(mqttConfig: MqttConfig) = withContext(ioDispatcher){
 
+        sensorEventCollectionJob?.cancel()
+        gpsDataCollectionJob?.cancel()
+
         sensorEventCollectionJob = scope.launch {
             sensorEventProvider.events.collect { sensorEvent ->
 
@@ -191,6 +194,9 @@ class SensorPublisher(
                     }
                     exception?.printStackTrace()
 
+                    sensorEventCollectionJob?.cancel()
+                    gpsDataCollectionJob?.cancel()
+
                 }
 
             })
@@ -200,6 +206,9 @@ class SensorPublisher(
             scope.launch {
                 _mqttConnectionState.emit(MqttConnectionState.ConnectionError(e))
             }
+
+            sensorEventCollectionJob?.cancel()
+            gpsDataCollectionJob?.cancel()
         }
 
     }
@@ -230,6 +239,8 @@ class SensorPublisher(
             _mqttConnectionState.emit(MqttConnectionState.ConnectionError(exception))
         }
         exception?.printStackTrace()
+        sensorEventCollectionJob?.cancel()
+        gpsDataCollectionJob?.cancel()
     }
 
     override fun messageArrived(topic: String?, message: MqttMessage?) {
