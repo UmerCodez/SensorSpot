@@ -1,0 +1,1 @@
+Issue Fixed : https://github.com/UmerCodez/SensorSpot/issues/8
