@@ -83,7 +83,10 @@ class SensorEventProviderImp(
     override fun stopProvidingEvents() {
 
         for (sensorType in _sensorTypes) {
-            sensorManager.unregisterListener(this,sensorManager.getDefaultSensor(sensorType))
+            val sensor = sensorManager.getDefaultSensor(sensorType)
+
+            if (sensor != null)
+                sensorManager.unregisterListener(this, sensor)
         }
 
     }
