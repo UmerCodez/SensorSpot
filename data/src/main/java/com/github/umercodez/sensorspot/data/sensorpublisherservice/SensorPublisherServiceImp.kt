@@ -89,6 +89,9 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
             sensorEventProvider = SensorEventProviderImp(applicationContext),
             gpsDataProvider = GpsDataProviderImp(applicationContext)
         )
+
+        collectMqttConnectionState()
+        collectSelectedSensors()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -113,6 +116,12 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         val mqttConfig = MqttConfig.fromSettings(settings)
 
 
+        sensorPublisher.sensorSamplingRate = settings.sensorSamplingRate
+        sensorPublisher.connectAndPublish(mqttConfig)
+
+    }
+
+    private fun collectMqttConnectionState(){
         mqttConnectionStateJob = scope.launch {
             sensorPublisher.mqttConnectionState.collect{ connectionState ->
                 Log.d(TAG, "connection State: $connectionState")
@@ -141,7 +150,7 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
                         .apply {
                             setSmallIcon(R.drawable.flare_24dp)
                             setContentTitle("Publishing")
-                            setContentText("connected to ${mqttConfig.brokerAddress}")
+                            setContentText("connected to broker")
                             setPriority(NotificationCompat.PRIORITY_HIGH)
                             setContentIntent(pendingIntent)
                             setAutoCancel(false)
@@ -160,11 +169,10 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
                 }
             }
         }
+    }
 
-        sensorPublisher.sensorSamplingRate = settings.sensorSamplingRate
-        sensorPublisher.connectAndPublish(mqttConfig)
-
-       selectedSensorsJob = scope.launch {
+    private fun collectSelectedSensors() {
+        selectedSensorsJob = scope.launch {
             sensorsRepository.getSelectedSensorsAsFlow().collect { selectedSenors ->
                 sensorPublisher.sensorIntTypes = selectedSenors.map { it.type }
             }
@@ -183,19 +191,12 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
                     sensorPublisher.stopProvidingGpsData()
             }
         }
-
     }
 
     override fun stopPublishing() {
         scope.launch {
             sensorPublisher.disconnect()
-            isConnected = false
-            stopForeground()
         }
-
-        mqttConnectionStateJob?.cancel()
-        selectedSensorsJob?.cancel()
-        gpsSelectionStateJob?.cancel()
 
         stopSelf()
     }
@@ -208,6 +209,11 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy()")
+
+        mqttConnectionStateJob?.cancel()
+        selectedSensorsJob?.cancel()
+        gpsSelectionStateJob?.cancel()
+
         scope.cancel()
         sensorPublisher.cleanUp()
     }
