@@ -91,7 +91,6 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         )
 
         collectMqttConnectionState()
-        collectSelectedSensors()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -117,6 +116,7 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
 
 
         sensorPublisher.sensorSamplingRate = settings.sensorSamplingRate
+        collectSelectedSensors()
         sensorPublisher.connectAndPublish(mqttConfig)
 
     }
@@ -171,16 +171,25 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         }
     }
 
+    // This function is called in connectAndPublish()
     private fun collectSelectedSensors() {
+
+        // Since connectAndPublish() can be called multiple times (e.g., from onStartCommand()),
+        // we need to cancel the previous collection job. This prevents multiple collectors
+        // from running concurrently, which would cause redundant work
+        selectedSensorsJob?.cancel()
+
         selectedSensorsJob = scope.launch {
             sensorsRepository.getSelectedSensorsAsFlow().collect { selectedSenors ->
+                Log.d(TAG, "selectedSensors: ${selectedSenors.map{ it.stringType }.toList()}")
                 sensorPublisher.sensorIntTypes = selectedSenors.map { it.type }
             }
         }
 
+        gpsSelectionStateJob?.cancel()
         gpsSelectionStateJob = scope.launch {
             sensorsRepository.gpsSelectionState.collect { isGpsSelected ->
-
+                Log.d(TAG, "isGpsSelected: $isGpsSelected")
                 if(!locationPermissionGranted)
                     return@collect
 
