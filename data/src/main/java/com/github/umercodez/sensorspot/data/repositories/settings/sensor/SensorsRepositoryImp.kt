@@ -55,8 +55,8 @@ class SensorsRepositoryImp(
         return sensorManager.getSensorList(Sensor.TYPE_ALL).filter{ it.reportingMode != Sensor.REPORTING_MODE_ONE_SHOT}.toDeviceSensors()
     }
 
-    override fun getSensor(sensorType: Int): DeviceSensor {
-        return sensorManager.getDefaultSensor(sensorType)?.toDeviceSensor() ?: throw IllegalArgumentException("Sensor not found")
+    override fun getSensor(sensorType: Int): DeviceSensor? {
+        return sensorManager.getDefaultSensor(sensorType)?.toDeviceSensor()
     }
 
     override suspend fun saveSelectedSensors(sensors: List<DeviceSensor>) {
@@ -68,14 +68,14 @@ class SensorsRepositoryImp(
     override suspend fun getSelectedSensors(): List<DeviceSensor> {
         return context.userPreferencesDataStore.data.map { pref ->
             Json.decodeFromString<List<Int>>(pref[Key.SELECTED_SENSORS] ?: "[]")
-                .map { getSensor(it) }.toList()
+                .mapNotNull { getSensor(it) }.toList()
         }.flowOn(ioDispatcher).first()
     }
 
     override fun getSelectedSensorsAsFlow() : Flow<List<DeviceSensor>> {
         return context.userPreferencesDataStore.data.map { pref ->
             Json.decodeFromString<List<Int>>(pref[Key.SELECTED_SENSORS] ?: "[]")
-                .map { getSensor(it) }.toList()
+                .mapNotNull{ getSensor(it) }.toList()
         }.flowOn(ioDispatcher)
     }
 

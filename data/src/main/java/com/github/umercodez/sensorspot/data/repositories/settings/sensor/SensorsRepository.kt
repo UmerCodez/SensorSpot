@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SensorsRepository {
     fun getAvailableSensors() : List<DeviceSensor>
-    fun getSensor(sensorType : Int) : DeviceSensor
+    fun getSensor(sensorType : Int) : DeviceSensor?
     suspend fun saveSelectedSensors(sensors : List<DeviceSensor>)
     suspend fun getSelectedSensors() : List<DeviceSensor>
     fun getSelectedSensorsAsFlow(): Flow<List<DeviceSensor>>
