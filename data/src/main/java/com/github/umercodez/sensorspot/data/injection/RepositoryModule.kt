@@ -18,31 +18,30 @@
  */
 package com.github.umercodez.sensorspot.data.injection
 
-import android.content.Context
 import com.github.umercodez.sensorspot.data.repositories.settings.SettingsRepository
 import com.github.umercodez.sensorspot.data.repositories.settings.SettingsRepositoryImp
 import com.github.umercodez.sensorspot.data.repositories.settings.sensor.SensorsRepository
 import com.github.umercodez.sensorspot.data.repositories.settings.sensor.SensorsRepositoryImp
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class) // ViewModelComponent and ServiceComponent can both access bindings from SingletonComponent.
-object RepositoryModule {
+abstract class RepositoryModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideSettingsRepository(@ApplicationContext context: Context): SettingsRepository {
-        return SettingsRepositoryImp(context)
-    }
+    abstract fun bindSettingsRepository(
+        settingsRepositoryImp: SettingsRepositoryImp
+    ): SettingsRepository
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideSensorsRepository(@ApplicationContext context: Context): SensorsRepository {
-        return SensorsRepositoryImp(context)
-    }
+    abstract fun bindSensorsRepository(
+        sensorsRepositoryImp: SensorsRepositoryImp
+    ): SensorsRepository
+
 }
