@@ -89,6 +89,9 @@ Starting with Android 14, background execution restrictions are more strict. Whe
 
 To avoid this issue, keep the app running in the foreground while connected.
 
+## Video Demo
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/xI9tSzI1VFA/0.jpg)](https://www.youtube.com/watch?v=xI9tSzI1VFA)
+
 ## ⭐️ Support
 
 Appreciate the project? Here's how you can help:
