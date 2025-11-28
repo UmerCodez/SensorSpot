@@ -60,9 +60,12 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
     lateinit var settingsRepository: SettingsRepository
     @Inject
     lateinit var sensorsRepository: SensorsRepository
+    @Inject
+    lateinit var sensorPublisher: SensorPublisher
+    @Inject
+    lateinit var scope: CoroutineScope
 
-    private lateinit var sensorPublisher: SensorPublisher
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     private var mqttConnectionStateJob: Job? = null
     private var selectedSensorsJob: Job? = null
     private var gpsSelectionStateJob: Job? = null
@@ -84,12 +87,6 @@ class SensorPublisherServiceImp : Service(), SensorPublisherService {
         super.onCreate()
         Log.d(TAG, "onCreate()")
         createNotificationChannel()
-        sensorPublisher = SensorPublisher(
-            scope = scope,
-            sensorEventProvider = SensorEventProviderImp(applicationContext),
-            gpsDataProvider = GpsDataProviderImp(applicationContext)
-        )
-
         collectMqttConnectionState()
     }
 
