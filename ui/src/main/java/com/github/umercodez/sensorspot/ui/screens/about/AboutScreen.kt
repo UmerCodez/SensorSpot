@@ -32,6 +32,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -50,6 +52,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -129,20 +134,35 @@ fun AboutScreen() {
 
         Spacer(Modifier.height(10.dp))
 
-        var showFeedBackForm by remember { mutableStateOf(false) }
+        var showIssueReporter by remember { mutableStateOf(false) }
         val webViewState = rememberWebViewState("https://docs.google.com/forms/d/e/1FAIpQLSf6iGpaUrPYAR5fhkLSkHdqWUdruGzc2kQOluQnb_NbTcQ8tg/viewform?usp=header")
 
         TextButton(
             onClick = {
-                showFeedBackForm = true
-            }
+                showIssueReporter = true
+            },
+            colors = ButtonDefaults.textButtonColors(
+                contentColor = MaterialTheme.colorScheme.error
+            )
         ) {
-            Text("Send Feedback")
+            Text(
+                textAlign = TextAlign.Center,
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle()){
+                        append("Report Issue")
+                    }
+                    withStyle(style = SpanStyle()){
+                        append("\n")
+                    }
+                    withStyle(style = SpanStyle(fontSize = MaterialTheme.typography.labelSmall.fontSize)){
+                        append("(Non Github users)")
+                    }
+            })
         }
 
-        if(showFeedBackForm){
+        if(showIssueReporter){
             ModalBottomSheet(
-                onDismissRequest = { showFeedBackForm = false }
+                onDismissRequest = { showIssueReporter = false }
             ) {
 
                 Column{
