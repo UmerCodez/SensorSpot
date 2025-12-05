@@ -100,6 +100,8 @@ Appreciate the project? Here's how you can help:
 2. **Contribute**: Found an issue or have a feature idea? Submit a PR.
 3. **Feedback**: Have suggestions? Open an issue or start a discussion.
 
-
+## TODOs
+1. Automatic reconnect
+2. Keep alive
 
 
