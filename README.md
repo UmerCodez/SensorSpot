@@ -33,7 +33,6 @@ The data is published to the topic `android/sensor` in the following JSON format
   "values": [0.31892395, -0.97802734, 10.049896]
 }
 ```
-Note: If the **Dedicated Topics** option is enabled in the settings, the `type` field **will not be included** in the JSON payload. Each sensor will instead publish to its own topic. For example, accelerometer data will be sent to `android/sensor/accelerometer`.
 
 <div align="center">
    
