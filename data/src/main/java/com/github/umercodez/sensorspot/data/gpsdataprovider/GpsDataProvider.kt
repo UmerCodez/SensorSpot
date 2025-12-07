@@ -22,7 +22,6 @@ package com.github.umercodez.sensorspot.data.gpsdataprovider
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
 
 private val jsonConf = Json {
     encodeDefaults = true
@@ -41,19 +40,7 @@ data class GpsData(
     val time: Long,
     val bearing: Float
 ){
-    fun toJson(includeType: Boolean = true) :String {
-        val json = mapOf(
-            "type" to if (includeType) type else null,
-            "latitude" to latitude,
-            "longitude" to longitude,
-            "altitude" to altitude,
-            "accuracy" to accuracy,
-            "speed" to speed,
-            "time" to time,
-            "bearing" to bearing
-        ).filterValues { it != null }
-        return JSONObject(json).toString()
-    }
+    fun toJson() = jsonConf.encodeToString(this)
 }
 
 interface GpsDataProvider {

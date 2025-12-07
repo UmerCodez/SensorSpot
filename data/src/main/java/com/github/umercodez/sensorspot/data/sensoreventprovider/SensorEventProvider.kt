@@ -19,22 +19,17 @@
 package com.github.umercodez.sensorspot.data.sensoreventprovider
 
 import kotlinx.coroutines.flow.Flow
-import org.json.JSONObject
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 
+@Serializable
 data class SensorEvent(
     val type: String,
     val values: List<Float>,
     val timestamp: Long
 ){
-    fun toJson(includeType: Boolean = true): String {
-        val json = mapOf(
-            "type" to if (includeType) type else null,
-            "values" to values,
-            "timestamp" to timestamp
-        ).filterValues { it != null }
-        return JSONObject(json).toString()
-    }
+    fun toJson() = Json.encodeToString(this)
 }
 interface SensorEventProvider {
     val events: Flow<SensorEvent>
