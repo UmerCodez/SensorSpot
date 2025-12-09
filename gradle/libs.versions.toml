@@ -8,7 +8,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
-composeBom = "2025.09.00"
+composeBom = "2025.12.00"
 kotlinxSerializationJson = "1.8.0"
 ksp = "2.2.20-2.0.3" # "kotlinVersion-kspVersion"
 hiltAndroid = "2.57.1"
@@ -20,8 +20,10 @@ hiltNavigationCompose = "1.2.0"
 accompanistPermissions = "0.36.0"
 leakcanaryAndroid = "3.0-alpha-8"
 acra = "5.13.1"
+materialIconsCore = "1.7.8"
 
 [libraries]
+androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsCore" }
 acra-mail = { module = "ch.acra:acra-mail", version.ref = "acra" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 compose-webview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
