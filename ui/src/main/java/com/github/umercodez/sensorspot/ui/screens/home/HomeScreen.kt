@@ -127,60 +127,56 @@ fun HomeScreen() {
         }
         
     ) { innerPadding ->
-        Box(Modifier
-            .fillMaxSize()
-            .padding(innerPadding)){
 
-            NavHost(
-                navController = navController,
-                startDestination = Route.PublishScreen
-            ) {
-                composable<Route.PublishScreen> {
-                    if(!LocalInspectionMode.current){
-                        PublishScreen()
-                    }
-                    else {
-                        PublishScreen(
-                            state = PublishScreenState(),
-                            onEvent = {}
-                        )
-                    }
+        NavHost(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            navController = navController,
+            startDestination = Route.PublishScreen
+        ) {
+            composable<Route.PublishScreen> {
+                if (!LocalInspectionMode.current) {
+                    PublishScreen()
+                } else {
+                    PublishScreen(
+                        state = PublishScreenState(),
+                        onEvent = {}
+                    )
                 }
-                composable<Route.SensorsScreen> {
-                    if(!LocalInspectionMode.current){
-                        SensorsScreen()
-                    }
-                    else {
-                        SensorsScreen(
-                            state = SensorsScreenState(
-                                allSensors = fakeSensors.toMutableStateList()
-                            ),
-                            onEvent = {}
-                        )
-                    }
-
-
+            }
+            composable<Route.SensorsScreen> {
+                if (!LocalInspectionMode.current) {
+                    SensorsScreen()
+                } else {
+                    SensorsScreen(
+                        state = SensorsScreenState(
+                            allSensors = fakeSensors.toMutableStateList()
+                        ),
+                        onEvent = {}
+                    )
                 }
 
-                composable<Route.SettingsScreen> {
-                    if(!LocalInspectionMode.current){
-                        SettingsScreen()
-                    }
-                    else {
-                        SettingsScreen(
-                            state = SettingsScreenState(),
-                            onEvent = {}
-                        )
-                    }
-                }
 
-                composable<Route.AboutScreen> {
-                    AboutScreen()
+            }
+
+            composable<Route.SettingsScreen> {
+                if (!LocalInspectionMode.current) {
+                    SettingsScreen()
+                } else {
+                    SettingsScreen(
+                        state = SettingsScreenState(),
+                        onEvent = {}
+                    )
                 }
-                    
+            }
+
+            composable<Route.AboutScreen> {
+                AboutScreen()
             }
 
         }
+
     }
 
 }
