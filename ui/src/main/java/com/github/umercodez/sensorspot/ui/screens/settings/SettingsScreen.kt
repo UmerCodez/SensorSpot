@@ -21,11 +21,13 @@ package com.github.umercodez.sensorspot.ui.screens.settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults.itemShape
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -36,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.umercodez.sensorspot.ui.SensorSpotTheme
@@ -141,6 +144,13 @@ fun SettingsScreen(
         EditTextPref(
             value = state.sensorSamplingRate.toString(),
             title = { Text("Sensor Sampling Rate") },
+            description = {
+                Text(
+                    modifier = Modifier.padding(15.dp),
+                    text = "The value is the minimum time between sensor updates (in microseconds). The range is 0–200,000 µs, where 0 µs means the fastest possible rate, and 200,000 µs is about 5 samples per second.",
+                    style = MaterialTheme.typography.labelMedium
+                )
+            },
             isError = { value ->
                 value.isEmpty() || value.toIntOrNull() == null || value.toInt() !in 0..200000
             },

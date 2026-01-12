@@ -56,6 +56,7 @@ fun EditTextPref(
     value: String,
     password: Boolean = false,
     title: @Composable () -> Unit,
+    description: @Composable () -> Unit = {},
     isError: ((String) -> Boolean)? = null,
     errorText: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -99,6 +100,10 @@ fun EditTextPref(
 
                 title()
 
+                Spacer(Modifier.height(10.dp))
+
+                description()
+
                 val isError = isError?.invoke(value) ?: false
 
                 Spacer(Modifier.height(10.dp))
@@ -138,7 +143,7 @@ fun EditTextPref(
 
 @Preview
 @Composable
-fun EdittextPrefPreview(){
+private fun EdittextPrefPreview(){
     SensorSpotTheme {
         EditTextPref(
             value = "192.168.19.1",
