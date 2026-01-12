@@ -91,6 +91,9 @@ To avoid this issue, keep the app running in the foreground while connected.
 ## Video Demo
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/xI9tSzI1VFA/0.jpg)](https://www.youtube.com/watch?v=xI9tSzI1VFA)
 
+## Projects Using Sensor Spot
+1. A real time mobile sensor data pipeline with visualizations. A demonstration of a complete real-time data pipeline for collecting Android sensor data and visualizing it using modern data engineering tools.[https://github.com/4KSHAT0p/Mobile-Sensor-Visualizer](https://github.com/4KSHAT0p/Mobile-Sensor-Visualizer)
+
 ## ⭐️ Support
 
 Appreciate the project? Here's how you can help:
