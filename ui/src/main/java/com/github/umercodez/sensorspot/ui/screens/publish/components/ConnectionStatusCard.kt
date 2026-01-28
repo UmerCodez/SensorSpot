@@ -38,6 +38,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -180,12 +181,28 @@ fun ConnectionStatusCard(
             }
         ) {
             exception?.also { e ->
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    text = e.cause?.toString() ?: "Unknow Reason"
-                )
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(10.dp)
+                ) {
+                    Text("Cause:")
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        text = e.cause?.toString() ?: "Unknown"
+                    )
+
+                    HorizontalDivider()
+
+                    Text("Message:")
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        text = e.message.toString()
+                    )
+                }
             }
 
         }
