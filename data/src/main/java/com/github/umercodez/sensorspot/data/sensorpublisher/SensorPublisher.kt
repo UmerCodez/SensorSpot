@@ -201,7 +201,7 @@ class SensorPublisher(
 
             })
 
-        } catch (e: MqttException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             scope.launch {
                 _mqttConnectionState.emit(MqttConnectionState.ConnectionError(e))
