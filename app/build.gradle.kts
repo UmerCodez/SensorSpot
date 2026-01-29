@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.github.umercodez.sensorspot"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 23
         versionName = "1.11.0"
