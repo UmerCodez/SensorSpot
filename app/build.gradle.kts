@@ -43,10 +43,6 @@ android {
         }
     }
 
-    hilt {
-        enableAggregatingTask = false
-    }
-
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false
@@ -59,6 +55,10 @@ android {
         }
     }
 
+}
+
+hilt {
+    enableAggregatingTask = false
 }
 
 dependencies {
