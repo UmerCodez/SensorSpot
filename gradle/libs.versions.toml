@@ -1,7 +1,7 @@
 [versions]
 agp = "8.13.2"
 composeWebview = "0.33.6"
-kotlin = "2.3.0"
+kotlin = "2.3.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
