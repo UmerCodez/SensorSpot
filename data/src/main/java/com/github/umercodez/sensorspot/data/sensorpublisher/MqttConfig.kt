@@ -22,7 +22,7 @@ import com.github.umercodez.sensorspot.data.repositories.settings.Settings
 
 
 object MqttConfigDefaults{
-    const val BROKER_ADDRESS = "broker.hivemq.com"
+    const val BROKER_ADDRESS = "broker.emqx.io"
     const val BROKER_PORT = 1883
     const val QOS = 0
     const val TOPIC = "android/sensor"
