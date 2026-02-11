@@ -32,36 +32,21 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.umercodez.sensorspot.ui.SensorSpotTheme
-import com.kevinnzou.web.LoadingState
-import com.kevinnzou.web.WebView
-import com.kevinnzou.web.rememberWebViewState
 
 @SuppressLint("SetJavaScriptEnabled")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,58 +118,6 @@ fun AboutScreen() {
         )
 
         Spacer(Modifier.height(10.dp))
-
-        var showIssueReporter by remember { mutableStateOf(false) }
-        val webViewState = rememberWebViewState("https://docs.google.com/forms/d/e/1FAIpQLSf6iGpaUrPYAR5fhkLSkHdqWUdruGzc2kQOluQnb_NbTcQ8tg/viewform?usp=header")
-
-        TextButton(
-            onClick = {
-                showIssueReporter = true
-            },
-            colors = ButtonDefaults.textButtonColors(
-                contentColor = MaterialTheme.colorScheme.error
-            )
-        ) {
-            Text(
-                textAlign = TextAlign.Center,
-                text = buildAnnotatedString {
-                    withStyle(style = SpanStyle()){
-                        append("Report Issue")
-                    }
-                    withStyle(style = SpanStyle()){
-                        append("\n")
-                    }
-                    withStyle(style = SpanStyle(fontSize = MaterialTheme.typography.labelSmall.fontSize)){
-                        append("(Non Github users)")
-                    }
-            })
-        }
-
-        if(showIssueReporter){
-            ModalBottomSheet(
-                onDismissRequest = { showIssueReporter = false }
-            ) {
-
-                Column{
-
-                    val loadingState = webViewState.loadingState
-                    if (loadingState is LoadingState.Loading) {
-                        LinearProgressIndicator(
-                            progress = { loadingState.progress },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
-
-                    WebView(
-                        modifier = Modifier.fillMaxSize(),
-                        state = webViewState,
-                        onCreated = { it.settings.javaScriptEnabled = true }
-                    )
-
-                }
-
-            }
-        }
 
     }
 }

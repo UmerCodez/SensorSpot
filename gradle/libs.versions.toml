@@ -1,6 +1,5 @@
 [versions]
 agp = "9.0.0"
-composeWebview = "0.33.6"
 kotlin = "2.3.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -26,7 +25,6 @@ materialIconsCore = "1.7.8"
 androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsCore" }
 acra-mail = { module = "ch.acra:acra-mail", version.ref = "acra" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-compose-webview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
