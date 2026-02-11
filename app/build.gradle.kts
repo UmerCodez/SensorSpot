@@ -13,8 +13,8 @@ android {
         applicationId = "com.github.umercodez.sensorspot"
         minSdk = 23
         targetSdk = 36
-        versionCode = 27
-        versionName = "1.15.0"
+        versionCode = 28
+        versionName = "1.16.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
